@@ -1,4 +1,9 @@
 #!/usr/bin/env python
+
+# Copyright(c) 2010. Free Stream Media Corp. Released under the terms
+# of the GNU General Public License version 2.0.
+# See http://www.gnu.org/licenses/gpl-2.0.html
+
 import os
 import sys
 import qt4reactor
@@ -9,9 +14,9 @@ import socket
 from PyQt4 import QtCore, QtGui
 
 PORT = 8080
-FLING_ADDR_BASE = 'http://api.staging.flingo.tv'
-DEVICE_CHECK = FLING_ADDR_BASE + '/fling/has_devices'
-FLING_URL = FLING_ADDR_BASE + '/fling/fling'
+FLING_ADDR_BASE = 'http://staging.flingo.tv'
+DEVICE_CHECK = FLING_ADDR_BASE + '/has_services'
+FLING_URL = FLING_ADDR_BASE + '/fling'
 
 try:
     from win32com.shell import shellcon, shell            
@@ -79,8 +84,8 @@ class FlingIcon(QtGui.QSystemTrayIcon):
                 name = os.path.basename(fileName)
                 params = {}
                 params['url'] = 'http://' + get_local_ip() +':' + str(PORT) + fileName 
-                params['image'] = 'http://omar.flingo.tv/f_icon.png'
-                params['publisher_name'] = 'fox'
+                params['image'] = 'http://develop.flingo.tv/images/fling/f_icon.jpg'
+                params['publisher_name'] = 'fling'
                 params['description'] = 'Desktop Fling of %s from %s' % (name, socket.gethostname())
                 params['title'] = '%s via Desktop Fling' % name
                 data = urllib.urlencode(params)

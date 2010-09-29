@@ -5,6 +5,10 @@ Usage:
     python setup.py py2app
 """
 
+# Copyright(C) 2010.  Free Stream Media Corp.  Released under the terms of
+# GNU General Public License version 2.0.
+# See http://www.gnu.org/licenses/gpl-2.0.html
+
 from setuptools import setup
 
 APP = ['flingo.py']
