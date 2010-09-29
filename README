@@ -1,0 +1,12 @@
+Requires the TV to have a Flingo-enabled application that pulls
+the queue call from the Flingo backend.
+
+* Flingo/Desktop
+
+  Fling items from your personal computer's file system to the TV.
+
+* Flingo/CommandLine
+ 
+  Fling items from the command-line to the TV.
+
+
