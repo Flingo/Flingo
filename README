@@ -4,9 +4,12 @@ the queue call from the Flingo backend.
 * Flingo/Desktop
 
   Fling items from your personal computer's file system to the TV.
+  Will serve the file to the TV as long as Flingo Desktop is running.
 
 * Flingo/CommandLine
  
-  Fling items from the command-line to the TV.
+  Fling items from the command-line to the TV.  Will serve the file
+  to the file until the command-line tools is stopped (e.g., ctrl-C). 
+ 
 
 

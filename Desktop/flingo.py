@@ -2,7 +2,8 @@
 
 # Copyright(c) 2010. Free Stream Media Corp. Released under the terms
 # of the GNU General Public License version 2.0.
-# See http://www.gnu.org/licenses/gpl-2.0.html
+#
+# author: Omar Zennadi
 
 import os
 import sys
