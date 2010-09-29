@@ -85,7 +85,7 @@ class FlingIcon(QtGui.QSystemTrayIcon):
                 name = os.path.basename(fileName)
                 params = {}
                 params['url'] = 'http://' + get_local_ip() +':' + str(PORT) + fileName 
-                params['image'] = 'http://develop.flingo.tv/images/fling/f_icon.jpg'
+                params['image'] = 'http://flingo.tv/images/fling/f_icon.jpg'
                 params['publisher_name'] = 'fling'
                 params['description'] = 'Desktop Fling of %s from %s' % (name, socket.gethostname())
                 params['title'] = '%s via Desktop Fling' % name

@@ -66,7 +66,7 @@ def fling( path, port=PORT, title=None, description=None, image=None ):
         image_url = "http://%s:%d/%s" % ( ip, port, image ) 
         break
     else:
-      image_url = "http://staging.flingo.tv/images/fling/f_icon.jpg"
+      image_url = "http://flingo.tv/images/fling/f_icon.jpg"
 
   print "title:",title
   print "description:", description
