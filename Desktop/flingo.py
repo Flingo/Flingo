@@ -51,7 +51,7 @@ class FlingIcon(QtGui.QSystemTrayIcon):
         self.file.setDirectory(HOMEDIR)
         self.file.setReadOnly(True)
         self.setContextMenu(self.menu)
-        self.icon = QtGui.QIcon(os.path.join(os.path.abspath(''), 'flingo.png'))
+        self.icon = QtGui.QIcon(os.path.join(os.path.abspath(''), 'fling-icon-large.png'))
         self.setIcon(self.icon)
 
     def quit(self):
@@ -85,7 +85,7 @@ class FlingIcon(QtGui.QSystemTrayIcon):
                 name = os.path.basename(fileName)
                 params = {}
                 params['url'] = 'http://' + get_local_ip() +':' + str(PORT) + fileName 
-                params['image'] = 'http://flingo.tv/images/fling/f_icon.jpg'
+                params['image'] = 'http://flingo.tv/images/fling/fling-icon-large.png'
                 params['publisher_name'] = 'fling'
                 params['description'] = 'Desktop Fling of %s from %s' % (name, socket.gethostname())
                 params['title'] = '%s via Desktop Fling' % name
