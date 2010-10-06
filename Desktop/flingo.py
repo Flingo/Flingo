@@ -13,11 +13,7 @@ import json
 import netifaces
 import socket
 from PyQt4 import QtCore, QtGui
-
-PORT = 8080
-FLING_ADDR_BASE = 'http://staging.flingo.tv'
-DEVICE_CHECK = FLING_ADDR_BASE + '/has_services'
-FLING_URL = FLING_ADDR_BASE + '/fling'
+from ConfigParser import RawConfigParser
 
 try:
     from win32com.shell import shellcon, shell            
@@ -26,13 +22,37 @@ try:
 except ImportError: # quick semi-nasty fallback for non-windows/win32com case
     HOMEDIR = os.path.expanduser("~")
 
+def update_config(conf_file, config={}):
+    c = config
+    if conf_file and os.path.isfile(conf_file):
+        rv = RawConfigParser()
+        rv.read(conf_file)
+        if rv.has_section('fling'):
+            for k,v in rv.items('fling'):
+                c[k] = v
+    return c
+    
+def find_config():
+    config = update_config('flingo.conf')
+    conf = os.getenv('FLING_CONF', default='')
+    if conf:
+        config = update_config(conf, config)
+    return config
+
 def get_local_ip():
     addr = None
     for i in netifaces.interfaces():
         addr = netifaces.ifaddresses(i).get(2,[{}])[0].get('addr')
         if addr and addr!='127.0.0.1':
             return addr
-    return None    
+    return None
+
+config = find_config()    
+PORT = int(config.get('port', 8080))
+FLING_ADDR_BASE = config.get('host', 'http://flingo.tv')
+DEVICE_CHECK = FLING_ADDR_BASE + '/fling/has_devices'
+FLING_URL = FLING_ADDR_BASE + '/fling/fling'
+IMAGE = config.get('image', 'http://www.flingo.tv/fling/f_icon.png')
     
 class FlingIcon(QtGui.QSystemTrayIcon):
     def __init__(self, parent=None):
@@ -51,7 +71,7 @@ class FlingIcon(QtGui.QSystemTrayIcon):
         self.file.setDirectory(HOMEDIR)
         self.file.setReadOnly(True)
         self.setContextMenu(self.menu)
-        self.icon = QtGui.QIcon(os.path.join(os.path.abspath(''), 'flingo.png'))
+        self.icon = QtGui.QIcon('flingo.png')
         self.setIcon(self.icon)
 
     def quit(self):
@@ -85,8 +105,7 @@ class FlingIcon(QtGui.QSystemTrayIcon):
                 name = os.path.basename(fileName)
                 params = {}
                 params['url'] = 'http://' + get_local_ip() +':' + str(PORT) + fileName 
-                params['image'] = 'http://flingo.tv/images/fling/f_icon.jpg'
-                params['publisher_name'] = 'fling'
+                params['image'] = IMAGE
                 params['description'] = 'Desktop Fling of %s from %s' % (name, socket.gethostname())
                 params['title'] = '%s via Desktop Fling' % name
                 data = urllib.urlencode(params)
