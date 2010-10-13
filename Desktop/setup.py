@@ -12,12 +12,12 @@ Usage:
 from setuptools import setup
 
 APP = ['flingo.py']
-DATA_FILES = ['flingo.png']
-OPTIONS = {'argv_emulation': True, 'iconfile': 'flingo.icns', 'includes': ['sip', 'PyQt4', 'qt4reactor']}
+DATA_FILES = ['flingo.png', 'flingo.conf']
+OPTIONS = {'argv_emulation': True, 'iconfile': 'flingo.icns', 'includes': ['sip', 'PyQt4']}
 
 setup(
     app=APP,
     data_files=DATA_FILES,
     options={'py2app': OPTIONS},
-    setup_requires=['py2app', 'netifaces', 'Twisted'],
+    setup_requires=['py2app', 'netifaces', 'Twisted', 'qt4reactor'],
 )

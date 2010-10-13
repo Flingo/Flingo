@@ -77,7 +77,7 @@ class FlingIcon(QtGui.QSystemTrayIcon):
     def quit(self):
         QtGui.QApplication.quit()
         sys.exit()
-        
+    
     def find(self):
         response = {}
         try:
@@ -97,7 +97,7 @@ class FlingIcon(QtGui.QSystemTrayIcon):
     def fling(self):
         try:
             fileNames = []
-            if (self.file.exec_()):
+            if (self.file.open()):
                 fileNames = self.file.selectedFiles()
             
             if fileNames:
