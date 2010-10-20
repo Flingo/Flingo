@@ -97,9 +97,9 @@ class FlingIcon(QtGui.QSystemTrayIcon):
     def fling(self):
         try:
             fileNames = []
-            if (self.file.open()):
+            if (self.file.exec_()):
                 fileNames = self.file.selectedFiles()
-            
+
             if fileNames:
                 fileName = str(fileNames[0])
                 name = os.path.basename(fileName)
@@ -111,7 +111,6 @@ class FlingIcon(QtGui.QSystemTrayIcon):
                 data = urllib.urlencode(params)
                 req = urllib2.Request(FLING_URL, data)
                 response = urllib2.urlopen(req).read()
-                print response
         except Exception, e:
             print str(e)
 
