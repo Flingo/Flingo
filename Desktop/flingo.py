@@ -52,7 +52,6 @@ PORT = int(config.get('port', 8080))
 FLING_ADDR_BASE = config.get('host', 'http://flingo.tv')
 DEVICE_CHECK = FLING_ADDR_BASE + '/fling/has_devices'
 FLING_URL = FLING_ADDR_BASE + '/fling/fling'
-IMAGE = config.get('image', 'http://www.flingo.tv/fling/f_icon.png')
     
 class FlingIcon(QtGui.QSystemTrayIcon):
     def __init__(self, parent=None):
@@ -105,7 +104,6 @@ class FlingIcon(QtGui.QSystemTrayIcon):
                 name = os.path.basename(fileName)
                 params = {}
                 params['url'] = 'http://' + get_local_ip() +':' + str(PORT) + fileName 
-                params['image'] = IMAGE
                 params['description'] = 'Desktop Fling of %s from %s' % (name, socket.gethostname())
                 params['title'] = '%s via Desktop Fling' % name
                 data = urllib.urlencode(params)
