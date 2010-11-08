@@ -17,7 +17,7 @@ from ConfigParser import RawConfigParser
 
 try:
     from win32com.shell import shellcon, shell            
-    HOMEDIR = shell.SHGetFolderPath(0, shellcon.CSIDL_APPDATA, 0, 0)
+    HOMEDIR = shell.SHGetFolderPath(0, shellcon.CSIDL_MYVIDEO, 0, 0)
  
 except ImportError: # quick semi-nasty fallback for non-windows/win32com case
     HOMEDIR = os.path.expanduser("~")
@@ -100,14 +100,16 @@ class FlingIcon(QtGui.QSystemTrayIcon):
                 fileNames = self.file.selectedFiles()
 
             if fileNames:
-                fileName = str(fileNames[0])
-                name = os.path.basename(fileName)
+		fileName = str(fileNames[0])
+		if sys.platform=='win32':
+		    fileName = fileName.replace("C:","")
+		name = os.path.basename(fileName)
                 params = {}
                 params['url'] = 'http://' + get_local_ip() +':' + str(PORT) + fileName 
                 params['description'] = 'Desktop Fling of %s from %s' % (name, socket.gethostname())
                 params['title'] = '%s via Desktop Fling' % name
                 data = urllib.urlencode(params)
-                req = urllib2.Request(FLING_URL, data)
+		req = urllib2.Request(FLING_URL, data)
                 response = urllib2.urlopen(req).read()
         except Exception, e:
             print str(e)
@@ -119,9 +121,14 @@ i = FlingIcon()
 i.show()
 
 from twisted.internet import reactor
-from twisted.web import server, resource, static
-doc_root = static.File("/")
-site = server.Site(doc_root)
+from twisted.web.server import Site
+from twisted.web.static import File
+
+root = "/"
+if sys.platform == 'win32':
+    root = "c:\\"
+doc_root = File(root)
+site = Site(doc_root)
 reactor.listenTCP(PORT, site)
 app.exec_()
 reactor.run() 

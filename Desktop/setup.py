@@ -8,16 +8,31 @@ Usage:
 # Copyright(C) 2010.  Free Stream Media Corp.  Released under the terms of
 # GNU General Public License version 2.0.
 # See http://www.gnu.org/licenses/gpl-2.0.html
+import sys
+from setuptools import setup, extension
 
-from setuptools import setup
-
-APP = ['flingo.py']
 DATA_FILES = ['flingo.png', 'flingo.conf']
-OPTIONS = {'argv_emulation': True, 'iconfile': 'flingo.icns', 'includes': ['sip', 'PyQt4']}
 
-setup(
-    app=APP,
-    data_files=DATA_FILES,
-    options={'py2app': OPTIONS},
-    setup_requires=['py2app', 'netifaces', 'Twisted', 'qt4reactor'],
-)
+if sys.platform == 'darwin':
+    APP = ['flingo.py']
+    OPTIONS = {'argv_emulation': True, 'iconfile': 'flingo.icns', 'includes': ['sip', 'PyQt4']}
+    REC = ['py2app', 'netifaces', 'Twisted', 'qt4reactor']
+    setup(
+        app=APP,
+    	data_files=DATA_FILES,
+    	options=OPTIONS,
+    	setup_requires=REC,
+    )
+else:
+    import py2exe
+    from glob import glob
+    ms_data = DATA_FILES  + ["Microsoft.VC90.CRT/msvcm90.dll", "Microsoft.VC90.CRT/msvcp90.dll", "Microsoft.VC90.CRT/msvcr90.dll", "Microsoft.VC90.CRT/Manifest.manifest",]
+    OPTIONS = {"includes" : ["sip", "PyQt4"], "packages" : ["twisted", "netifaces", "qt4reactor"]}
+    REC = ["py2exe"]
+    setup(
+        windows=[{"script": "flingo.py", "icon_resources": [(0, "flingo.ico")]}],
+    	data_files=ms_data,
+    	options={'py2exe' : OPTIONS},
+    )
+
+
