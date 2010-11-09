@@ -16,18 +16,14 @@ import SocketServer
 # default port.
 PORT = 18761
 
-image_ext = [ ".png", ".jpeg", ".jpg", ".gif" ]
+#image_ext = [ ".png", ".jpeg", ".jpg", ".gif" ]
 
 # If no title then the filename is used as the title.
 # If no description then a description is generated that states
 # where the file came from.  Even if a description is provided,
 # where the file came from is appended to the description.
-# If no image then fling searches for an image in the current directory.
-# If there is only one image then it is assumed to be the thumbnail.
-# If there is more than one image then it looks for an image with matching
-# filename but different extension than the file being flung.
 #
-def fling( path, port=PORT, title=None, description=None, image=None ):
+def fling( path, port=PORT, title=None, description=None ):
   if type(port) == str:
     port = int(port)
   print "fling %s from port %d with title %s" % (path, port, title)
@@ -53,29 +49,14 @@ def fling( path, port=PORT, title=None, description=None, image=None ):
   description += flung_across_lan
 
   url = "http://%s:%d/%s" % ( ip, port, path )
-  #image_url = "http://%s:%d/%s" % ( ip, port, image )
-  print "dir=", d
-  print "directory contents", os.listdir(d)
-  images = [f for f in os.listdir(d) if os.path.splitext(f)[1] in image_ext]
-  if len(images) == 1:
-    image_url = "http://%s:%d/%s" % ( ip, port, image )
-  else:
-    for f in images:
-      ifname = os.path.splitext(f)[0]
-      if fname == ifname:
-        image_url = "http://%s:%d/%s" % ( ip, port, image ) 
-        break
-    else:
-      image_url = "http://flingo.tv/images/fling/f_icon.jpg"
 
   print "title:",title
   print "description:", description
-  print "image:", image_url
   print "url:", url
 
-  fling_url="http://api.dave.flingo.tv/fling/fling?%s" % (  
-    "title=%s&image=%s&description=%s&url=%s&version=%s"%(
-    quote(title), quote(image_url), quote(description), quote(url), "1.0.12" ))
+  fling_url = "http://flingo.tv/fling/fling?%s" % (  
+    "title=%s&description=%s&url=%s&version=%s"%(
+    quote(title), quote(description), quote(url), "1.0.12" ))
 
   print "fling_url:", fling_url
   result = get(fling_url)
@@ -117,12 +98,12 @@ app (called "Web Videos" on Vizio VIA TVs).  The item should appear at the front
 """
 
     parser = OptionParser(usage=usage)
-    parser.add_option("-i", "--image", dest="image",
-      help="box art used to generate thumbs and larger images.  If no image " +
-           "is provided then fling.py searches the current directory.  If " +
-           "the directory has only one image then it is used.  If there is " +
-           "more than one image then it searches for one with a name "
-           "that matches flung file's name.", default="")
+    #parser.add_option("-i", "--image", dest="image",
+    #  help="box art used to generate thumbs and larger images.  If no image " +
+    #       "is provided then fling.py searches the current directory.  If " +
+    #       "the directory has only one image then it is used.  If there is " +
+    #       "more than one image then it searches for one with a name "
+    #       "that matches flung file's name.", default="")
     parser.add_option("-d", "--description", dest="description",
                       help="description of the file to be flung.", default="" )
     parser.add_option("-t", "--title", dest="title",
@@ -140,8 +121,7 @@ app (called "Web Videos" on Vizio VIA TVs).  The item should appear at the front
     fname = args[0]
     if type(options.port) in [str,unicode]:
       options.port = int(options.port)
-    fling( fname, options.port, options.title, options.description, 
-           options.image )
+    fling( fname, options.port, options.title, options.description )
 
     root_dir = os.getcwd()
 
