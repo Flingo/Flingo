@@ -11,7 +11,7 @@
   OutFile "setup.exe"
 
   ;Default installation folder
-  InstallDir “$PROGRAMFILES\flingo”
+  InstallDir "$PROGRAMFILES\flingo"
   
   ;Get installation folder from registry if available
   InstallDirRegKey HKCU "Software\flingo" ""
