@@ -57,14 +57,27 @@ Then install py2exe from
 
   http://www.py2exe.org/
 
+Then install twisted.
+
+  http://twistedmatrix.com/trac/
+
 From the command prompt change into the directory where you downloaded
 the Flingo Desktop sources.
 
   cd Flingo\Desktop
   python setup.py
 
-If py2exe fails because you do not have an MSVCM90.DLL then you can
-install Microsoft Visual Studio C++ Express for free from Microsoft.
+If py2exe fails because you do not have MSVCM90.DLL then at least as
+of this writing, you can install Microsoft Visual Studio C++ Express
+for free from Microsoft.  In my system the necessary DLLs were
+installed in the directory  
+
+  C:\Windows\winsxs\x86_microsoft.vc90.crt_1fc8b3b9a1e18e3b_9.0.30729.4974_none_50940634bcb759cb\
+
+
+
+
+
 
 
 
