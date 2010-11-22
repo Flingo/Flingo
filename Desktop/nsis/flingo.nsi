@@ -33,7 +33,7 @@
 
 ;Order of pages
 !insertmacro MUI_PAGE_WELCOME
-!insertmacro MUI_PAGE_LICENSE "fling_eula.rtf"
+!insertmacro MUI_PAGE_LICENSE "flingo_eula.rtf"
 !insertmacro MUI_PAGE_DIRECTORY
 Page custom SetCustom "" ""
 !insertmacro MUI_PAGE_INSTFILES
@@ -67,8 +67,8 @@ SectionEnd
  
 Section -AdditionalIcons 
   WriteIniStr "$INSTDIR\${PRODUCT_NAME}.url" "InternetShortcut" "URL" "${PRODUCT_WEB_SITE}"
-  CreateShortCut "$SMPROGRAMS\FLING\Website.lnk" "$INSTDIR\${PRODUCT_NAME}.url"
-  CreateShortCut "$SMPROGRAMS\FLING\Uninstall.lnk" "$INSTDIR\uninst.exe"
+  CreateShortCut "$SMPROGRAMS\flingo\Website.lnk" "$INSTDIR\${PRODUCT_NAME}.url"
+  CreateShortCut "$SMPROGRAMS\flingo\Uninstall.lnk" "$INSTDIR\uninst.exe"
 SectionEnd
 
 Section -Post
@@ -82,22 +82,22 @@ Section -Post
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "URLInfoAbout" "${PRODUCT_WEB_SITE}"
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "Publisher" "${PRODUCT_PUBLISHER}////"
 
-  ; add explorer pop-up menus for types handled by FLING.
-  ${addExplorerPopUpMenuItem} ".asf"  "Advanced Systems Format File" "FLING" "Send to FLING..." "$INSTDIR\flingo.exe $\"%L$\"" 
-  ${addExplorerPopUpMenuItem} ".avi"  "AVI File" "FLING" "Send to FLING..." "$INSTDIR\flingo.exe $\"%L$\"" 
-  ${addExplorerPopUpMenuItem} ".divx" "DivX Video File" "FLING" "Send to FLING..." "$INSTDIR\flingo.exe $\"%L$\""
-  ${addExplorerPopUpMenuItem} ".dvx"  "DivX Video File" "FLING" "Send to FLING..."  "$INSTDIR\flingo.exe $\"%L$\""
-  ${addExplorerPopUpMenuItem} ".mkv"  "Matroska Video File" "FLING" "Send to FLING..." "$INSTDIR\flingo.exe $\"%L$\"" 
-  ${addExplorerPopUpMenuItem} ".mp4"  "MPEG-4 Video File" "FLING" "Send to FLING..."  "$INSTDIR\flingo.exe $\"%L$\""
-  ${addExplorerPopUpMenuItem} ".m4v"  "MPEG-4 Video File" "FLING" "Send to FLING..."
-  ${addExplorerPopUpMenuItem} ".m4a"  "MPEG-4 Audio File" "FLING" "Send to FLING..."
-  ${addExplorerPopUpMenuItem} ".mov"  "QuickTime Movie" "FLING" "Send to FLING..."  "$INSTDIR\flingo.exe $\"%L$\""
-  ${addExplorerPopUpMenuItem} ".moov" "QuickTime Movie" "FLING" "Send to FLING..."  "$INSTDIR\flingo.exe $\"%L$\""
-  ${addExplorerPopUpMenuItem} ".3gp"  "3GPP Multimedia File" "FLING" "Send to FLING..."  "$INSTDIR\flingo.exe $\"%L$\""
-  ${addExplorerPopUpMenuItem} ".ogg"  "Ogg Media File" "FLING" "Send to FLING..."  "$INSTDIR\flingo.exe $\"%L$\""
-  ${addExplorerPopUpMenuItem} ".ogm"  "Ogg Media File" "FLING" "Send to FLING..."  "$INSTDIR\flingo.exe $\"%L$\""
-  ${addExplorerPopUpMenuItem} ".wmv"  "Windows Media Video File" "FLING" "Send to FLING..."  "$INSTDIR\flingo.exe $\"%L$\""  
-  ${addExplorerPopUpMenuItem} ".flv"  "Flash Video File" "FLING" "Send to FLING..."  "$INSTDIR\flingo.exe $\"%L$\""  
+  ; add explorer pop-up menus for types handled by flingo.
+  ${addExplorerPopUpMenuItem} ".asf"  "Advanced Systems Format File" "flingo" "Fling to TV or media device..." "$INSTDIR\flingo.exe $\"%L$\"" 
+  ${addExplorerPopUpMenuItem} ".avi"  "AVI File" "flingo" "Fling to TV or media device..." "$INSTDIR\flingo.exe $\"%L$\"" 
+  ${addExplorerPopUpMenuItem} ".divx" "DivX Video File" "flingo" "Fling to TV or media device..." "$INSTDIR\flingo.exe $\"%L$\""
+  ${addExplorerPopUpMenuItem} ".dvx"  "DivX Video File" "flingo" "Fling to TV or media device..."  "$INSTDIR\flingo.exe $\"%L$\""
+  ${addExplorerPopUpMenuItem} ".mkv"  "Matroska Video File" "flingo" "Fling to TV or media device..." "$INSTDIR\flingo.exe $\"%L$\"" 
+  ${addExplorerPopUpMenuItem} ".mp4"  "MPEG-4 Video File" "flingo" "Fling to TV or media device..."  "$INSTDIR\flingo.exe $\"%L$\""
+  ${addExplorerPopUpMenuItem} ".m4v"  "MPEG-4 Video File" "flingo" "Fling to TV or media device..."
+  ${addExplorerPopUpMenuItem} ".m4a"  "MPEG-4 Audio File" "flingo" "Fling to TV or media device..."
+  ${addExplorerPopUpMenuItem} ".mov"  "QuickTime Movie" "flingo" "Fling to TV or media device..."  "$INSTDIR\flingo.exe $\"%L$\""
+  ${addExplorerPopUpMenuItem} ".moov" "QuickTime Movie" "flingo" "Fling to TV or media device..."  "$INSTDIR\flingo.exe $\"%L$\""
+  ${addExplorerPopUpMenuItem} ".3gp"  "3GPP Multimedia File" "flingo" "Fling to TV or media device..."  "$INSTDIR\flingo.exe $\"%L$\""
+  ${addExplorerPopUpMenuItem} ".ogg"  "Ogg Media File" "flingo" "Fling to TV or media device..."  "$INSTDIR\flingo.exe $\"%L$\""
+  ${addExplorerPopUpMenuItem} ".ogm"  "Ogg Media File" "flingo" "Fling to TV or media device..."  "$INSTDIR\flingo.exe $\"%L$\""
+  ${addExplorerPopUpMenuItem} ".wmv"  "Windows Media Video File" "flingo" "Fling to TV or media device..."  "$INSTDIR\flingo.exe $\"%L$\""  
+  ${addExplorerPopUpMenuItem} ".flv"  "Flash Video File" "flingo" "Fling to TV or media device..."  "$INSTDIR\flingo.exe $\"%L$\""  
 SectionEnd 
 
 
@@ -135,29 +135,29 @@ Function SetCustom
   StrCmp ${TEMP1} "success" 0 continue
   Var /Global InstallStartMenuShortcut
   Var /Global InstallDesktopShortcut
-  Var /Global TorrentFileAssociation
+  ;Var /Global TorrentFileAssociation
   ReadINIStr $InstallStartMenuShortcut "$PLUGINSDIR\FileAssoc.ini" "Field 1" "State"
   ReadINIStr $InstallDesktopShortcut "$PLUGINSDIR\FileAssoc.ini" "Field 2" "State"
-  ReadINIStr $TorrentFileAssociation "$PLUGINSDIR\FileAssoc.ini" "Field 3" "State"
+  ;ReadINIStr $TorrentFileAssociation "$PLUGINSDIR\FileAssoc.ini" "Field 3" "State"
 
   IntCmp $InstallStartMenuShortcut 1 install_startmenu no_startmenu no_startmenu
   install_startmenu:
-    CreateDirectory "$SMPROGRAMS\FLING"
-    CreateShortCut "$SMPROGRAMS\FLING\FLING.lnk" "$INSTDIR\flingo.exe"
+    CreateDirectory "$SMPROGRAMS\flingo"
+    CreateShortCut "$SMPROGRAMS\flingo\flingo.lnk" "$INSTDIR\flingo.exe"
   no_startmenu:
 
   IntCmp $InstallDesktopShortcut 1 install_desktop no_desktop no_desktop
   install_desktop:
-    CreateShortCut "$DESKTOP\FLING.lnk" "$INSTDIR\flingo.exe"
+    CreateShortCut "$DESKTOP\flingo.lnk" "$INSTDIR\flingo.exe"
   no_desktop:
 
-  IntCmp $TorrentFileAssociation 1 set_torrent no_torrent no_torrent
-  set_torrent:
-    ; This makes a backup of the .torrent mapping in HKCR/.torrent/backup_xsval.
-    ; I can use this mapping later in the application later to launch the appropriate
-    ; application when the user decides not to send the file to the FLING.
-    ${registerExtension} "$INSTDIR\flingo.exe" ".torrent" "BitTorrent Metainfo File" "FLING"
-  no_torrent:
+  ;IntCmp $TorrentFileAssociation 1 set_torrent no_torrent no_torrent
+  ;set_torrent:
+  ;  ; This makes a backup of the .torrent mapping in HKCR/.torrent/backup_xsval.
+  ;  ; I can use this mapping later in the application later to launch the appropriate
+  ;  ; application when the user decides not to send the file to the flingo.
+  ;  ${registerExtension} "$INSTDIR\flingo.exe" ".torrent" "BitTorrent Metainfo File" "flingo"
+  ;no_torrent:
 
   continue:
     ; Restore the value of TEMP1 before returning.
@@ -184,36 +184,36 @@ Section Uninstall
   Delete "$INSTDIR\Readme.txt"
   Delete "$INSTDIR\flingo.exe"
 
-  Delete "$SMPROGRAMS\FLING\Uninstall.lnk"
-  Delete "$SMPROGRAMS\FLING\Website.lnk"
-  Delete "$DESKTOP\FLING.lnk"
-  Delete "$SMPROGRAMS\FLING\FLING.lnk"
+  Delete "$SMPROGRAMS\flingo\Uninstall.lnk"
+  Delete "$SMPROGRAMS\flingo\Website.lnk"
+  Delete "$DESKTOP\flingo.lnk"
+  Delete "$SMPROGRAMS\flingo\flingo.lnk"
 
-  RMDir "$SMPROGRAMS\FLING"
+  RMDir "$SMPROGRAMS\flingo"
   RMDir "$INSTDIR"
 
   DeleteRegKey ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}"
   DeleteRegKey HKLM "${PRODUCT_DIR_REGKEY}"
 
-  # Remove Explorer right-click menu items for types known to be handled by FLING and
+  # Remove Explorer right-click menu items for types known to be handled by flingo and
   # restore file associations.
-  ${unregisterExtension} ".torrent" "FLING"
-  ${removeExplorerPopUpMenuItem} ".torrent" "FLING" "Send to FLING..."
-  ${removeExplorerPopUpMenuItem} ".asf"  "FLING" "Send to FLING..."
-  ${removeExplorerPopUpMenuItem} ".avi"  "FLING" "Send to FLING..." 
-  ${removeExplorerPopUpMenuItem} ".divx" "FLING" "Send to FLING..." 
-  ${removeExplorerPopUpMenuItem} ".dvx"  "FLING" "Send to FLING..." 
-  ${removeExplorerPopUpMenuItem} ".mkv"  "FLING" "Send to FLING..." 
-  ${removeExplorerPopUpMenuItem} ".mp4"  "FLING" "Send to FLING..." 
-  ${removeExplorerPopUpMenuItem} ".m4v"  "FLING" "Send to FLING..." 
-  ${removeExplorerPopUpMenuItem} ".m4a"  "FLING" "Send to FLING..." 
-  ${removeExplorerPopUpMenuItem} ".mov"  "FLING" "Send to FLING..." 
-  ${removeExplorerPopUpMenuItem} ".moov" "FLING" "Send to FLING..." 
-  ${removeExplorerPopUpMenuItem} ".3gp"  "FLING" "Send to FLING..." 
-  ${removeExplorerPopUpMenuItem} ".ogg"  "FLING" "Send to FLING..." 
-  ${removeExplorerPopUpMenuItem} ".ogm"  "FLING" "Send to FLING..." 
-  ${removeExplorerPopUpMenuItem} ".wmv"  "FLING" "Send to FLING..."   
-  ${removeExplorerPopUpMenuItem} ".flv"  "FLING" "Send to FLING..."   
+  ${unregisterExtension} ".torrent" "flingo"
+  ${removeExplorerPopUpMenuItem} ".torrent" "flingo" "Fling to TV or media device..."
+  ${removeExplorerPopUpMenuItem} ".asf"  "flingo" "Fling to TV or media device..."
+  ${removeExplorerPopUpMenuItem} ".avi"  "flingo" "Fling to TV or media device..." 
+  ${removeExplorerPopUpMenuItem} ".divx" "flingo" "Fling to TV or media device..." 
+  ${removeExplorerPopUpMenuItem} ".dvx"  "flingo" "Fling to TV or media device..." 
+  ${removeExplorerPopUpMenuItem} ".mkv"  "flingo" "Fling to TV or media device..." 
+  ${removeExplorerPopUpMenuItem} ".mp4"  "flingo" "Fling to TV or media device..." 
+  ${removeExplorerPopUpMenuItem} ".m4v"  "flingo" "Fling to TV or media device..." 
+  ${removeExplorerPopUpMenuItem} ".m4a"  "flingo" "Fling to TV or media device..." 
+  ${removeExplorerPopUpMenuItem} ".mov"  "flingo" "Fling to TV or media device..." 
+  ${removeExplorerPopUpMenuItem} ".moov" "flingo" "Fling to TV or media device..." 
+  ${removeExplorerPopUpMenuItem} ".3gp"  "flingo" "Fling to TV or media device..." 
+  ${removeExplorerPopUpMenuItem} ".ogg"  "flingo" "Fling to TV or media device..." 
+  ${removeExplorerPopUpMenuItem} ".ogm"  "flingo" "Fling to TV or media device..." 
+  ${removeExplorerPopUpMenuItem} ".wmv"  "flingo" "Fling to TV or media device..."   
+  ${removeExplorerPopUpMenuItem} ".flv"  "flingo" "Fling to TV or media device..."   
 
   SetAutoClose true
 SectionEnd

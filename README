@@ -12,4 +12,64 @@ the queue call from the Flingo backend.
   to the file until the command-line tools is stopped (e.g., ctrl-C). 
  
 
+Install
+=======
+
+Download flingo.dmb from https://github.com/Flingo/Flingo/downloads
+Open flingo.dmg
+
+When presetend with a dialog
+
+  "flingo" is an application downloaded from the Internet.
+  Are you sure want to open it?
+
+click open.  When the window opens, move flingo into Applications.
+
+
+Build from source for windows
+-----------------------------
+
+Obtain the source distribution from the github download page 
+
+  https://github.com/Flingo/Flingo
+  
+by clicking on "Downloads" on the right-middle of the web page.
+A dialog appears and presents options to download source as
+a gzipped tar ball (.tar.gz) or a zip file.  Any recent verison of
+Windows natively understands .zip files so download the zip file.
+
+Alternatively checkout the latest version using git.
+
+  http://git-scm.com
+
+or checkout the latest version from the github repository using git. 
+For example, run the following from the cmd prompt once git has been
+installed:
+
+  git clone https://github.com/Flingo/Flingo.git
+
+If you wish to build Flingo Desktop from source, install python 2.6 or later.
+Install setuptools, which can be obtained from 
+
+  http://pypi.python.org/pypi/setuptools
+
+Then install py2exe from
+
+  http://www.py2exe.org/
+
+From the command prompt change into the directory where you downloaded
+the Flingo Desktop sources.
+
+  cd Flingo\Desktop
+  python setup.py
+
+If py2exe fails because you do not have an MSVCM90.DLL then you can
+install Microsoft Visual Studio C++ Express for free from Microsoft.
+
+
+
+
+
+
+
 
