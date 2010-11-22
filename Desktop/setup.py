@@ -9,14 +9,16 @@ Usage:
 # GNU General Public License version 2.0.
 # See http://www.gnu.org/licenses/gpl-2.0.html
 import sys
+import os
 from setuptools import setup, extension
+
 
 DATA_FILES = ['flingo.png', 'flingo.conf']
 
 if sys.platform == 'darwin':
     APP = ['flingo.py']
     OPTIONS = {'argv_emulation': True, 'iconfile': 'flingo.icns', 'includes': ['sip', 'PyQt4']}
-    REC = ['py2app', 'netifaces', 'Twisted', 'qt4reactor']
+    REC = ['py2app', 'Twisted', 'qt4reactor']
     setup(
         app=APP,
     	data_files=DATA_FILES,
@@ -27,12 +29,13 @@ else:
     import py2exe
     from glob import glob
     ms_data = DATA_FILES  + ["Microsoft.VC90.CRT/msvcm90.dll", "Microsoft.VC90.CRT/msvcp90.dll", "Microsoft.VC90.CRT/msvcr90.dll", "Microsoft.VC90.CRT/Manifest.manifest",]
-    OPTIONS = {"includes" : ["sip", "PyQt4"], "packages" : ["twisted", "netifaces", "qt4reactor"]}
+    OPTIONS = {"includes" : ["sip", "PyQt4"], "packages" : ["twisted", "qt4reactor"], 'bundle_files': 1}
     REC = ["py2exe"]
     setup(
         windows=[{"script": "flingo.py", "icon_resources": [(0, "flingo.ico")]}],
     	data_files=ms_data,
     	options={'py2exe' : OPTIONS},
+	zipfile=None,
     )
 
 

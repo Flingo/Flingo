@@ -10,7 +10,6 @@ import sys
 import qt4reactor
 import urllib, urllib2
 import json
-import netifaces
 import socket
 from PyQt4 import QtCore, QtGui
 from ConfigParser import RawConfigParser
@@ -40,11 +39,9 @@ def find_config():
     return config
 
 def get_local_ip():
-    addr = None
-    for i in netifaces.interfaces():
-        addr = netifaces.ifaddresses(i).get(2,[{}])[0].get('addr')
-        if addr and addr!='127.0.0.1':
-            return addr
+    addr = socket.gethostbyname(socket.gethostname())
+    if addr and addr!='127.0.0.1':
+    	return addr
     return None
 
 config = find_config()    
@@ -66,7 +63,7 @@ class FlingIcon(QtGui.QSystemTrayIcon):
         
         self.file = QtGui.QFileDialog(None)
         self.file.setFileMode(QtGui.QFileDialog.ExistingFile)
-        self.file.setFilter("Video Files (*.mp4)")
+        #self.file.setFilter("Video Files (*.mp4)")
         self.file.setDirectory(HOMEDIR)
         self.file.setReadOnly(True)
         self.setContextMenu(self.menu)
