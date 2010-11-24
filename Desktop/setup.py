@@ -9,7 +9,6 @@ Usage:
 # GNU General Public License version 2.0.
 # See http://www.gnu.org/licenses/gpl-2.0.html
 import sys
-import os
 from setuptools import setup, extension
 
 
@@ -22,7 +21,7 @@ if sys.platform == 'darwin':
     setup(
         app=APP,
     	data_files=DATA_FILES,
-    	options=OPTIONS,
+    	options={'py2app': OPTIONS},
     	setup_requires=REC,
     )
 else:
