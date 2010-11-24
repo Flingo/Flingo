@@ -61,6 +61,11 @@ Then install twisted.
 
   http://twistedmatrix.com/trac/
 
+Install Qt.  I downlaoded the windows installer which includes all of the components
+to build using Qt including PyQt.
+
+  http://www.riverbankcomputing.co.uk/software/pyqt/download
+
 From the command prompt change into the directory where you downloaded
 the Flingo Desktop sources.
 
