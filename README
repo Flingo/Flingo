@@ -26,8 +26,8 @@ When presetend with a dialog
 click open.  When the window opens, move flingo into Applications.
 
 
-Build from source for windows
------------------------------
+Build from source
+-----------------
 
 Obtain the source distribution from the github download page 
 
@@ -53,6 +53,12 @@ Install setuptools, which can be obtained from
 
   http://pypi.python.org/pypi/setuptools
 
+
+Build from source for MS Windows
+--------------------------------
+
+Obtain source code as described in the steps presented in "Build from Source."
+
 Then install py2exe from
 
   http://www.py2exe.org/
@@ -61,8 +67,8 @@ Then install twisted.
 
   http://twistedmatrix.com/trac/
 
-Install Qt.  I downlaoded the windows installer which includes all of the components
-to build using Qt including PyQt.
+Install Qt.  I downlaoded the windows installer which includes all of
+the components to build using Qt including PyQt.
 
   http://www.riverbankcomputing.co.uk/software/pyqt/download
 
@@ -80,11 +86,109 @@ installed in the directory
   C:\Windows\winsxs\x86_microsoft.vc90.crt_1fc8b3b9a1e18e3b_9.0.30729.4974_none_50940634bcb759cb\
 
 
+Build from source for Mac OS X
+------------------------------
+
+In my first attempt to build I used PyQT with Carbon, but when running py2app
+I encountered the error:
+
+  ...
+  AttributeError: 'module' object has no attribute 'TickCount'
+
+The suggestion at 
+
+  http://stackoverflow.com/questions/3461983/evt-tickcount-not-found-with-python2-6-on-osx-10-6-3
+
+is that this is a problem with the Evt module from Carbon.  One of the
+suggested solutions is to use a 32-bit only Python from python.org
+instead of the Apple-supplied one.  I downloaded Python 2.6.6 from python.org
+and replaced the 2.6.1 installed on my system.
+
+I was able to build flingo.org using 32-bit builds.
+
+python 2.6.6
+XCode
+  xcode_3.2.2_and_iphone_sdk_3.2_final.dmg
+
+Qt SDK
+  qt-mac-carbon-opensource-4.7.1.dmg
+  http://get.qt.nokia.com/qt/source/qt-mac-carbon-opensource-4.7.1.dmg
+
+SIP
+  cd sip-4.11.2/
+  python configure.py --arch i386
+  make
+  sudo make install
 
 
+PyQt
+  cd PyQt-mac-gpl-4.8.1/
+  python configure.py --use-arch i386
+  make
+  sudo make install
 
+twisted
+  sudo easy_install twisted
 
+  This installed version 10.1.0.
 
+qt4reactor
+  http://twistedmatrix.com/trac/attachment/ticket/1770/qt4reactor.py
+
+  Put in the directory Flingo/Desktop in the repo.
+
+  I included qt4reactor in the repo for fear that this version might
+  disppear given that it isn't part of a versioned distribution but just
+  an attachment to a ticket.
+
+py2app
+
+  sudo easy_install py2app
+
+I ran into a couple of problems when building py2app:
+
+   ...
+   IOError: [Errno 2] No such file or directory: '/Library/Python/2.6/site-packages/py2app-0.5.2-py2.6.egg/py2app/apptemplate/prebuilt/main-i386'
+ > /System/Library/Frameworks/Python.framework/Versions/2.6/lib/python2.6/shutil.py(52)copyfile()
+ -> fsrc = open(src, 'rb')
+ 
+ I tried to install py2app from source, but I got a new error:
+ 
+   File "/Library/Python/2.6/site-packages/setuptools-0.6c11-py2.6.egg/setuptools/package_index.py", line 475, in fetch_distribution
+ AttributeError: 'NoneType' object has no attribute 'clone'
+ 
+ Searching on the web shows that this issue was closed 
+ 
+   http://bugs.python.org/setuptools/issue90
+ 
+ But the fix was supposedly in 0.6c12.  So I downloaded the 0.6c12dev version:
+ 
+   setuptools-0.6c12dev_r85334-py2.6.egg
+ 
+ I then tried to reinstall py2app which revealed the requirement for 
+ a newer version of modulegraph:
+ 
+   error: Could not find suitable distribution for Requirement.parse('modulegraph>=0.8.1')
+ 
+ easy_install modulegraph installed 0.8 which is clearly <0.8.1, so I 
+ cloned the Mercurial repo 
+ 
+   hg clone http://bitbucket.org/ronaldoussoren/modulegraph
+ 
+ and installs as 0.8.2.
+ 
+ Now py2app installs.
+ 
+ Switched back to the Flingo repository:  Flingo/Desktop
+ 
+   python setup.py py2app
+ 
+ This successfully creates dist/flingo.app.  
+ 
+   cd dist
+   open flingo.app
+ 
+ Success!
 
 
 
