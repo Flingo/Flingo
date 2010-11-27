@@ -18,11 +18,11 @@ DATA_FILES = ['flingo.png', 'flingo.conf']
 if sys.platform == 'darwin':
     APP = ['flingo.py']
     OPTIONS = {'argv_emulation': True, 'iconfile': 'flingo.icns', 'includes': ['sip', 'PyQt4']}
-    REC = ['py2app', 'Twisted', 'qt4reactor']
+    REC = ['py2app', 'Twisted']  #, 'qt4reactor']
     setup(
         app=APP,
     	data_files=DATA_FILES,
-    	options=OPTIONS,
+    	options={'py2app':OPTIONS},
     	setup_requires=REC,
     )
 else:
