@@ -67,6 +67,10 @@ Then install twisted.
 
   http://twistedmatrix.com/trac/
 
+Twisted requires zope.
+
+  easy_install zope.interface
+
 Install Qt.  I downlaoded the windows installer which includes all of
 the components to build using Qt including PyQt.
 
@@ -152,7 +156,7 @@ I ran into a couple of problems when building py2app:
  > /System/Library/Frameworks/Python.framework/Versions/2.6/lib/python2.6/shutil.py(52)copyfile()
  -> fsrc = open(src, 'rb')
  
- I tried to install py2app from source, but I got a new error:
+I tried to install py2app from source, but I got a new error:
  
    File "/Library/Python/2.6/site-packages/setuptools-0.6c11-py2.6.egg/setuptools/package_index.py", line 475, in fetch_distribution
  AttributeError: 'NoneType' object has no attribute 'clone'
@@ -165,30 +169,34 @@ I ran into a couple of problems when building py2app:
  
    setuptools-0.6c12dev_r85334-py2.6.egg
  
- I then tried to reinstall py2app which revealed the requirement for 
- a newer version of modulegraph:
+I then tried to reinstall py2app which revealed the requirement for 
+a newer version of modulegraph:
+
+  error: Could not find suitable distribution for Requirement.parse('modulegraph>=0.8.1')
+
+easy_install modulegraph installed 0.8 which is clearly <0.8.1, so I 
+cloned the Mercurial repo 
+
+  hg clone http://bitbucket.org/ronaldoussoren/modulegraph
+
+and installs as 0.8.2.
+
+Now py2app installs.
+
+Switched back to the Flingo repository:  Flingo/Desktop
+
+  python setup.py py2app
+
+This successfully creates dist/flingo.app.  
+
+  cd dist
+  open flingo.app
+
+Success!
  
-   error: Could not find suitable distribution for Requirement.parse('modulegraph>=0.8.1')
- 
- easy_install modulegraph installed 0.8 which is clearly <0.8.1, so I 
- cloned the Mercurial repo 
- 
-   hg clone http://bitbucket.org/ronaldoussoren/modulegraph
- 
- and installs as 0.8.2.
- 
- Now py2app installs.
- 
- Switched back to the Flingo repository:  Flingo/Desktop
- 
-   python setup.py py2app
- 
- This successfully creates dist/flingo.app.  
- 
-   cd dist
-   open flingo.app
- 
- Success!
+As an aside, I converted Mac flingo.icns to Windows flingo.ico using 
+http://iconverticons.com. 
+
 
 
 
