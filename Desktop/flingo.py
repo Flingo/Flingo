@@ -82,10 +82,10 @@ class FlingIcon(QtGui.QSystemTrayIcon):
       except Exception,e:
          print str(e)
 
-         if response==True:
-            self.fling()
-         else:
-            self.warning()
+      if response==True:
+         self.fling()
+      else:
+         self.warning()
 
    def warning(self):
       QtGui.QMessageBox.warning(self.menu,"Warning","No flingable devices were found.")
