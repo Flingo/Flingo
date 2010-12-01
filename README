@@ -4,18 +4,19 @@ the queue call from the Flingo backend.
 * Flingo/Desktop
 
   Fling items from your personal computer's file system to the TV.
-  Will serve the file to the TV as long as Flingo Desktop is running.
+  Will serve the file to the TV as long as the Flingo desktop application
+  is running.
 
 * Flingo/CommandLine
  
   Fling items from the command-line to the TV.  Will serve the file
-  to the file until the command-line tools is stopped (e.g., ctrl-C). 
+  until command-line Flingo is stopped (e.g., ctrl-C). 
  
 
 Install
 =======
 
-Download flingo.dmb from https://github.com/Flingo/Flingo/downloads
+Download flingo.dmg from https://github.com/Flingo/Flingo/downloads
 Open flingo.dmg
 
 When presetend with a dialog
@@ -42,14 +43,12 @@ Alternatively checkout the latest version using git.
 
   http://git-scm.com
 
-or checkout the latest version from the github repository using git. 
-For example, run the following from the cmd prompt once git has been
-installed:
+Once git has been installed, clone the Flingo repository:
 
   git clone https://github.com/Flingo/Flingo.git
 
-If you wish to build Flingo Desktop from source, install python 2.6 or later.
-Install setuptools, which can be obtained from 
+If you wish to build the Flingo desktop application from source, install 
+python 2.6 or later.  Install setuptools, which can be obtained from 
 
   http://pypi.python.org/pypi/setuptools
 
@@ -71,7 +70,7 @@ Twisted requires zope.
 
   easy_install zope.interface
 
-Install Qt.  I downlaoded the windows installer which includes all of
+Install Qt.  I downloaded the windows installer which includes all of
 the components to build using Qt including PyQt.
 
   http://www.riverbankcomputing.co.uk/software/pyqt/download
