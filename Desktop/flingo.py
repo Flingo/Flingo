@@ -243,6 +243,7 @@ class FlingIcon(QtGui.QSystemTrayIcon):
       try:
          if sys.platform=='win32':
             fileName = fileName.replace('C:','')
+            fileName = fileName.replace('\\', '/')
          name = os.path.basename(fileName)
          #http://flingo.tv/fling/fling?[url=U | deofuscator=D&context=C][&guid=G&title=T&description=D&image=I&preempt=P]
          params = {}
