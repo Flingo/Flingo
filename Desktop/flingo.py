@@ -13,6 +13,9 @@ import json
 import socket
 from PyQt4 import QtCore, QtGui
 from ConfigParser import RawConfigParser
+from twisted.internet import reactor
+from twisted.web.server import Site
+from twisted.web.static import File
 
 def update_config(conf_file, config={}):
    c = config
@@ -121,7 +124,9 @@ class FlingIcon(QtGui.QSystemTrayIcon):
          cache.write(self.cache)
          cache.close()
       except IOError: pass
-      self.flingtimer.stop()
+      try:
+         reactor.callLater(1, reactor.stop)
+      except: pass
       QtGui.QApplication.quit()
       sys.exit()
 
@@ -198,7 +203,6 @@ class FlingIcon(QtGui.QSystemTrayIcon):
       #make sure the timer is stopped
       self.flingtimer.stop()
       #clear the cached flings
-      os.remove('cache.log')
       self.cache = ''
       #install timer to check for files and fling them
       self.flingtimer.start(5000)
@@ -257,14 +261,10 @@ class FlingIcon(QtGui.QSystemTrayIcon):
          print str(e)
 
 app = QtGui.QApplication([])
-qt4reactor.install()
+#qt4reactor.install()
 
 i = FlingIcon()
 i.show()
-
-from twisted.internet import reactor
-from twisted.web.server import Site
-from twisted.web.static import File
 
 root = '/'
 if sys.platform == 'win32':
