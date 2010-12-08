@@ -13,9 +13,6 @@ import json
 import socket
 from PyQt4 import QtCore, QtGui
 from ConfigParser import RawConfigParser
-from twisted.internet import reactor
-from twisted.web.server import Site
-from twisted.web.static import File
 
 def update_config(conf_file, config={}):
    c = config
@@ -189,9 +186,10 @@ class FlingIcon(QtGui.QSystemTrayIcon):
       try:
          fileNames = None
 
-         self.flingdir = QtGui.QFileDialog.getExistingDirectory(parent=None,
-                         caption='Select directory to Fling from...', directory=QtCore.QDir.currentPath())
-         if (self.flingdir):
+         dir = QtGui.QFileDialog.getExistingDirectory(parent=None,
+               caption='Select directory to Fling from...', directory=QtCore.QDir.currentPath())
+         if (dir):
+            self.flingdir = dir
             self.prepDirFling()
             #store the selected directory in the configuration file
             store_cfg_value(DIRKEY, self.flingdir)
@@ -261,10 +259,14 @@ class FlingIcon(QtGui.QSystemTrayIcon):
          print str(e)
 
 app = QtGui.QApplication([])
-#qt4reactor.install()
+qt4reactor.install()
 
 i = FlingIcon()
 i.show()
+
+from twisted.internet import reactor
+from twisted.web.server import Site
+from twisted.web.static import File
 
 root = '/'
 if sys.platform == 'win32':
