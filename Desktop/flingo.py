@@ -78,9 +78,8 @@ class FlingIcon(QtGui.QSystemTrayIcon):
    def __init__(self, parent=None):
       self.INIT_COMPLETE = False
       QtGui.QSystemTrayIcon.__init__(self, parent)
-
+      #initialize what files have been flung
       self.cache = CACHE
-
       #initialize the guid, used later for flinging to single devices
       self.guid = None
       #initialize the fling directory for use with flung directory contents
@@ -89,11 +88,9 @@ class FlingIcon(QtGui.QSystemTrayIcon):
       self.menu = QtGui.QMenu(parent)
       #check if there's devices to fling to
       self.find()
-
       #add menu options
       self.menu.addAction(ACTFILE, self.flingFile)
       self.menu.addAction(ACTDIR, self.flingDir)
-
       #menu item with submenu for detected devices
       self.devs = QtGui.QAction('Set Devices', self.menu)
       self.submenu = QtGui.QMenu(self.menu)
@@ -121,7 +118,19 @@ class FlingIcon(QtGui.QSystemTrayIcon):
       self.INIT_COMPLETE = True
 
    def quit(self):
+      #remove any files from the cache that don't exist anymore
+      allFiles = str(self.cache).split(',')
+      self.cache = None
+      for singleFile in allFiles:
+         if (os.path.isfile(singleFile)):
+            if(self.cache != None):
+               self.cache = self.cache + ','
+            else:
+               self.cache = ''
+            self.cache = self.cache + singleFile
+      #store all the files that have been flung
       store_cfg_value(CACHEKEY, self.cache)
+      #exit cleanly
       app.quit()
       sys.exit(app.exec_())
 
