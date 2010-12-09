@@ -14,6 +14,13 @@ import socket
 from PyQt4 import QtCore, QtGui
 from ConfigParser import RawConfigParser
 
+app = QtGui.QApplication([])
+qt4reactor.install()
+
+from twisted.internet import reactor
+from twisted.web.server import Site
+from twisted.web.static import File
+
 def update_config(conf_file, config={}):
    c = config
    if conf_file and os.path.isfile(conf_file):
@@ -21,7 +28,10 @@ def update_config(conf_file, config={}):
       rv.read(conf_file)
       if rv.has_section('fling'):
          for k,v in rv.items('fling'):
-            c[k] = v
+            if (v == 'None'):
+               c[k] = None
+            else:
+               c[k] = v
    return c
 
 def find_config():
@@ -37,8 +47,6 @@ def store_cfg_value(key, value=None):
       cfgprsr = RawConfigParser()
       cfgprsr.read(cfg_file)
       if (cfgprsr.has_section('fling')):
-         if (value == None):
-            value = 'None'
          cfgprsr.set('fling', key, value)
          savecfg = open(cfg_file, 'wb')
          cfgprsr.write(savecfg)
@@ -55,11 +63,13 @@ ACTQUIT = 'Quit'
 NAMEKEY = 'name'
 GUIDKEY = 'guid'
 DIRKEY  = 'directory'
+CACHEKEY= 'cache'
 config = find_config()
 PORT = int(config.get('port', 8080))
 FLING_ADDR_BASE = config.get('host', 'http://flingo.tv')
-DEV_NAME = config.get(NAMEKEY, 'None')
-DIR_PATH = config.get(DIRKEY, 'None')
+DEV_NAME = config.get(NAMEKEY, None)
+DIR_PATH = config.get(DIRKEY, None)
+CACHE = config.get(CACHEKEY, None)
 DEVICE_CHECK = FLING_ADDR_BASE + '/fling/has_devices'
 DEVICE_LOOKUP = FLING_ADDR_BASE + '/fling/lookup'
 FLING_URL = FLING_ADDR_BASE + '/fling/fling'
@@ -69,12 +79,7 @@ class FlingIcon(QtGui.QSystemTrayIcon):
       self.INIT_COMPLETE = False
       QtGui.QSystemTrayIcon.__init__(self, parent)
 
-      self.cache = ''
-      try:
-         cache = open('cache.log', 'r')
-         self.cache = cache.read()
-         cache.close()
-      except IOError: pass
+      self.cache = CACHE
 
       #initialize the guid, used later for flinging to single devices
       self.guid = None
@@ -106,7 +111,7 @@ class FlingIcon(QtGui.QSystemTrayIcon):
       quit=self.menu.addAction(ACTQUIT)
       self.connect(quit,QtCore.SIGNAL('triggered()'),self.quit)
       #start the timer if a directory was loaded from the configuration file
-      if (self.flingdir != 'None'):
+      if (self.flingdir != None):
          self.flingtimer.start(5000)
 
       self.setContextMenu(self.menu)
@@ -116,11 +121,7 @@ class FlingIcon(QtGui.QSystemTrayIcon):
       self.INIT_COMPLETE = True
 
    def quit(self):
-      try:
-         cache = open('cache.log', 'w')
-         cache.write(self.cache)
-         cache.close()
-      except IOError: pass
+      store_cfg_value(CACHEKEY, self.cache)
       app.quit()
       sys.exit(app.exec_())
 
@@ -176,13 +177,12 @@ class FlingIcon(QtGui.QSystemTrayIcon):
                self.guid = str(resp[GUIDKEY])
       #store the selected value in the configuration file
       store_cfg_value(NAMEKEY, sel)
-      if (self.flingdir != 'None' and self.INIT_COMPLETE):
+      if (self.flingdir != None and self.INIT_COMPLETE):
          self.prepDirFling()
 
    def flingDir(self):
       try:
          fileNames = None
-
          dir = QtGui.QFileDialog.getExistingDirectory(parent=None,
                caption='Select directory to Fling from...', directory=QtCore.QDir.currentPath())
          if (dir):
@@ -198,7 +198,7 @@ class FlingIcon(QtGui.QSystemTrayIcon):
       #make sure the timer is stopped
       self.flingtimer.stop()
       #clear the cached flings
-      self.cache = ''
+      self.cache = None
       #install timer to check for files and fling them
       self.flingtimer.start(5000)
 
@@ -206,17 +206,17 @@ class FlingIcon(QtGui.QSystemTrayIcon):
       if(dir == None):
          dir = str(self.flingdir)
       fileNames = os.listdir(dir)
-
       if fileNames:
          for fileName in fileNames:
             fullPath = os.path.join(dir, fileName)
-
             if (os.path.isfile(fullPath)):
                #if file name already flung, don't fling it
-               if (self.cache.find(fullPath) == -1):
+               if (str(self.cache).find(fullPath) == -1):
                   #add the file to the cache file
-                  if(self.cache != ''):
+                  if(self.cache != None):
                      self.cache = self.cache + ','
+                  else:
+                     self.cache = ''
                   self.cache = self.cache + fullPath
                   #fling unflung file
                   self.fling(fullPath)
@@ -226,7 +226,6 @@ class FlingIcon(QtGui.QSystemTrayIcon):
    def flingFile(self):
       try:
          fileNames = []
-
          fileNames = QtGui.QFileDialog.getOpenFileNames(parent=None,
                      caption='Select files to Fling...', directory=QtCore.QDir.currentPath())
          if fileNames:
@@ -256,15 +255,8 @@ class FlingIcon(QtGui.QSystemTrayIcon):
       except Exception, e:
          print str(e)
 
-app = QtGui.QApplication([])
-qt4reactor.install()
-
 i = FlingIcon()
 i.show()
-
-from twisted.internet import reactor
-from twisted.web.server import Site
-from twisted.web.static import File
 
 root = '/'
 if sys.platform == 'win32':
