@@ -121,11 +121,8 @@ class FlingIcon(QtGui.QSystemTrayIcon):
          cache.write(self.cache)
          cache.close()
       except IOError: pass
-      try:
-         reactor.callLater(1, reactor.stop)
-      except: pass
-      QtGui.QApplication.quit()
-      sys.exit()
+      app.quit()
+      sys.exit(app.exec_())
 
    def find(self):
       response = {}
@@ -275,5 +272,4 @@ if sys.platform == 'win32':
 doc_root = File(root)
 site = Site(doc_root)
 reactor.listenTCP(PORT, site)
-app.exec_()
 reactor.run()
