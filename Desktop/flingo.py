@@ -13,14 +13,13 @@ import json
 import socket
 from PyQt4 import QtCore, QtGui
 from ConfigParser import RawConfigParser
-
+#initialize the qt application and load the reactor for qt and twisted
 app = QtGui.QApplication([])
 qt4reactor.install()
-
 from twisted.internet import reactor
 from twisted.web.server import Site
 from twisted.web.static import File
-
+#get the values from the configuration file
 def update_config(conf_file, config={}):
    c = config
    if conf_file and os.path.isfile(conf_file):
@@ -33,14 +32,14 @@ def update_config(conf_file, config={}):
             else:
                c[k] = v
    return c
-
+#find the configuration file
 def find_config():
    config = update_config('flingo.conf')
    conf = os.getenv('FLING_CONF', default='')
    if conf:
       config = update_config(conf, config)
    return config
-
+#store configuration file values, used at cleanup when exiting
 def store_cfg_value(key, value=None):
    cfg_file = 'flingo.conf'
    if cfg_file and os.path.isfile(cfg_file):
@@ -50,24 +49,27 @@ def store_cfg_value(key, value=None):
          cfgprsr.set('fling', key, value)
          savecfg = open(cfg_file, 'wb')
          cfgprsr.write(savecfg)
-
+#gets the local IP address
 def get_local_ip():
    addr = socket.gethostbyname(socket.gethostname())
    if addr and addr!='127.0.0.1':
       return addr
    return None
-
+#actions that appear as options in the menu
 ACTFILE = 'Fling File'
 ACTDIR  = 'Fling Directory'
 ACTSETDIR  = 'Set Directory'
 ACTQUIT = 'Quit'
+#keys in the configuration file
 NAMEKEY = 'name'
 GUIDKEY = 'guid'
 DIRKEY  = 'directory'
 DIRCHKKEY = 'flingdir'
 CACHEKEY= 'cache'
+#values for the Fling Directory configuration option
 CHECKED = 'Checked'
 UNCHECKED = 'Unchecked'
+#initialize the configuration file and get the values
 config = find_config()
 PORT = int(config.get('port', 8080))
 FLING_ADDR_BASE = config.get('host', 'http://flingo.tv')
@@ -75,9 +77,11 @@ DEV_NAME = config.get(NAMEKEY, None)
 DIR_PATH = config.get(DIRKEY, None)
 FLNGDIRCHK = config.get(DIRCHKKEY, UNCHECKED)
 CACHE = config.get(CACHEKEY, None)
+#setup the URLs
 DEVICE_CHECK = FLING_ADDR_BASE + '/fling/has_devices'
 DEVICE_LOOKUP = FLING_ADDR_BASE + '/fling/lookup'
 FLING_URL = FLING_ADDR_BASE + '/fling/fling'
+#timer delay for polling the flung directory
 TIMERDELAY = 5000
 
 class FlingIcon(QtGui.QSystemTrayIcon):
@@ -88,7 +92,7 @@ class FlingIcon(QtGui.QSystemTrayIcon):
       #menu widget
       self.menu = QtGui.QMenu(parent)
       #check if there's devices to fling to
-      self.find()
+      self.findAnyDevice()
       #add menu options
       self.menu.addAction(ACTFILE, self.setFlingFiles)
       self.togdir = QtGui.QAction(ACTDIR, self.menu, triggered=self.toggleFlingDir)
@@ -110,7 +114,7 @@ class FlingIcon(QtGui.QSystemTrayIcon):
       self.getDevices()
       #quit option in menu
       quit=self.menu.addAction(ACTQUIT)
-      self.connect(quit,QtCore.SIGNAL('triggered()'),self.quit)
+      self.connect(quit,QtCore.SIGNAL('triggered()'),self.quitApp)
       #initialize what files have been flung
       self.cache = CACHE
       #initialize the guid, used later for flinging to single devices
@@ -120,13 +124,14 @@ class FlingIcon(QtGui.QSystemTrayIcon):
       #start the timer if a directory was loaded from the configuration file
       if (self.flingdir != None and FLNGDIRCHK == CHECKED):
          self.togdir.trigger()
+      #if the timer isn't started, make sure the Fling Directory option is unchecked
       else:
          self.togdir.setChecked(False)
       self.setContextMenu(self.menu)
       self.icon = QtGui.QIcon('flingo.png')
       self.setIcon(self.icon)
-
-   def quit(self):
+   #does some cleanup and exits the app
+   def quitApp(self):
       #store fling directory checked state
       if (self.togdir.isChecked()):
          store_cfg_value(DIRCHKKEY, CHECKED)
@@ -148,21 +153,20 @@ class FlingIcon(QtGui.QSystemTrayIcon):
       self.flingtimer.stop()
       app.quit()
       sys.exit(app.exec_())
-
-   def find(self):
+   #determine if there are any devices that can be flung to
+   def findAnyDevice(self):
       response = {}
       try:
          req = urllib2.Request(DEVICE_CHECK)
          response = json.loads(urllib2.urlopen(req).read())
       except Exception,e:
          print str(e)
-
+      #warn the user if no devices are detected
       if response!=True:
-         self.warning()
-
-   def warning(self):
+         self.noDeviceWarning()
+   def noDeviceWarning(self):
       QtGui.QMessageBox.warning(self.menu,'Warning','No flingable devices were found.')
-
+   #obtain a list of all devices that can be flung to
    def getDevices(self):
       response = {}
       try:
@@ -186,10 +190,9 @@ class FlingIcon(QtGui.QSystemTrayIcon):
                   #if the device name is in the config file, set this one as checked
                   if (str(resp[NAMEKEY]) == DEV_NAME):
                      act.trigger()
-
       except Exception,e:
          print str(e)
-
+   #the select device callback to switch and use the device's guid
    def selDevice(self):
       #reset the guid everytime so that default is All Devices
       self.guid = None
@@ -203,31 +206,37 @@ class FlingIcon(QtGui.QSystemTrayIcon):
       store_cfg_value(NAMEKEY, sel)
       if (self.flingdir != None):
          self.resetFlingDir()
-
+   #toggles fling directory option on/off, if no directory is selected, automatically launches the selection dialog
    def toggleFlingDir(self):
       #if checked and no folder selected yet, launch the directory dialog selection
       if (self.togdir.isChecked() and self.flingdir == None):
          self.setFlingDir()
+      #if checked and folder has been selected (serving up the directory), stop the timer
       elif (not self.togdir.isChecked()):
          self.flingtimer.stop()
       else:
+      #if checked and folder is already selected, start up the timer again
          self.flingtimer.start(TIMERDELAY)
-
+   #displays and sets the fling directory, also starts the
    def setFlingDir(self):
       try:
          fileNames = None
+         self.menu.setDisabled(True)
          dir = QtGui.QFileDialog.getExistingDirectory(parent=None,
                caption='Select directory to Fling from...', directory=QtCore.QDir.currentPath())
+         self.menu.setDisabled(False)
          if (dir):
             self.flingdir = dir
             self.resetFlingDir()
             #store the selected directory in the configuration file
             store_cfg_value(DIRKEY, self.flingdir)
             self.togdir.setChecked(True)
-
+         #if the user clicks cancel on the dialog AND a directory wasn't already selected, uncheck the Fling Directory option
+         elif(self.flingdir == None):
+            self.togdir.setChecked(False)
       except Exception, e:
          print str(e)
-
+   #reset the fling directory cache in the event devices or directory selection changes
    def resetFlingDir(self):
       #make sure the timer is stopped
       self.flingtimer.stop()
@@ -236,7 +245,7 @@ class FlingIcon(QtGui.QSystemTrayIcon):
       #install timer to check for files and fling them
       if (self.togdir.isChecked()):
          self.flingtimer.start(TIMERDELAY)
-
+   #recursively fling the files in a directory (e.g. find the files in the selected directory and subdirectories)
    def servDir(self, dir=None):
       if (dir == None):
          dir = str(self.flingdir)
@@ -257,19 +266,20 @@ class FlingIcon(QtGui.QSystemTrayIcon):
                   self.fling(fullPath)
             elif (os.path.isdir(fullPath)):
                self.servDir(fullPath)
-
+   #select and fling one or more files
    def setFlingFiles(self):
       try:
          fileNames = []
+         self.menu.setDisabled(True)
          fileNames = QtGui.QFileDialog.getOpenFileNames(parent=None,
                      caption='Select files to Fling...', directory=QtCore.QDir.currentPath())
+         self.menu.setDisabled(False)
          if fileNames:
             for fileName in fileNames:
                self.fling(str(fileName))
-
       except Exception, e:
          print str(e)
-
+   #makes the actual "API" call to fling the file to the selected device(s)
    def fling(self, fileName):
       try:
          if sys.platform=='win32':
@@ -286,13 +296,11 @@ class FlingIcon(QtGui.QSystemTrayIcon):
          data = urllib.urlencode(params)
          req = urllib2.Request(FLING_URL, data)
          response = urllib2.urlopen(req).read()
-
       except Exception, e:
          print str(e)
 
 i = FlingIcon()
 i.show()
-
 root = '/'
 if sys.platform == 'win32':
    root = 'C:\\'
