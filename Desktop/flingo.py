@@ -58,39 +58,43 @@ def get_local_ip():
    return None
 
 ACTFILE = 'Fling File'
-ACTDIR  = 'Set Directory'
+ACTDIR  = 'Fling Directory'
+ACTSETDIR  = 'Set Directory'
 ACTQUIT = 'Quit'
 NAMEKEY = 'name'
 GUIDKEY = 'guid'
 DIRKEY  = 'directory'
+DIRCHKKEY = 'flingdir'
 CACHEKEY= 'cache'
+CHECKED = 'Checked'
+UNCHECKED = 'Unchecked'
 config = find_config()
 PORT = int(config.get('port', 8080))
 FLING_ADDR_BASE = config.get('host', 'http://flingo.tv')
 DEV_NAME = config.get(NAMEKEY, None)
 DIR_PATH = config.get(DIRKEY, None)
+FLNGDIRCHK = config.get(DIRCHKKEY, UNCHECKED)
 CACHE = config.get(CACHEKEY, None)
 DEVICE_CHECK = FLING_ADDR_BASE + '/fling/has_devices'
 DEVICE_LOOKUP = FLING_ADDR_BASE + '/fling/lookup'
 FLING_URL = FLING_ADDR_BASE + '/fling/fling'
+TIMERDELAY = 5000
 
 class FlingIcon(QtGui.QSystemTrayIcon):
    def __init__(self, parent=None):
-      self.INIT_COMPLETE = False
       QtGui.QSystemTrayIcon.__init__(self, parent)
-      #initialize what files have been flung
-      self.cache = CACHE
-      #initialize the guid, used later for flinging to single devices
-      self.guid = None
-      #initialize the fling directory for use with flung directory contents
-      self.flingdir = DIR_PATH
-
+      #setting self.flingdir to None so that flinging the directory doesn't happen until ready
+      self.flingdir = None
+      #menu widget
       self.menu = QtGui.QMenu(parent)
       #check if there's devices to fling to
       self.find()
       #add menu options
-      self.menu.addAction(ACTFILE, self.flingFile)
-      self.menu.addAction(ACTDIR, self.flingDir)
+      self.menu.addAction(ACTFILE, self.setFlingFiles)
+      self.togdir = QtGui.QAction(ACTDIR, self.menu, triggered=self.toggleFlingDir)
+      self.togdir.setCheckable(True)
+      self.menu.addAction(self.togdir)
+      self.menu.addAction(ACTSETDIR, self.setFlingDir)
       #menu item with submenu for detected devices
       self.devs = QtGui.QAction('Set Devices', self.menu)
       self.submenu = QtGui.QMenu(self.menu)
@@ -107,23 +111,33 @@ class FlingIcon(QtGui.QSystemTrayIcon):
       #quit option in menu
       quit=self.menu.addAction(ACTQUIT)
       self.connect(quit,QtCore.SIGNAL('triggered()'),self.quit)
+      #initialize what files have been flung
+      self.cache = CACHE
+      #initialize the guid, used later for flinging to single devices
+      self.guid = None
+      #initialize the fling directory for use with flung directory contents
+      self.flingdir = DIR_PATH
       #start the timer if a directory was loaded from the configuration file
-      if (self.flingdir != None):
-         self.flingtimer.start(5000)
-
+      if (self.flingdir != None and FLNGDIRCHK == CHECKED):
+         self.togdir.trigger()
+      else:
+         self.togdir.setChecked(False)
       self.setContextMenu(self.menu)
       self.icon = QtGui.QIcon('flingo.png')
       self.setIcon(self.icon)
 
-      self.INIT_COMPLETE = True
-
    def quit(self):
+      #store fling directory checked state
+      if (self.togdir.isChecked()):
+         store_cfg_value(DIRCHKKEY, CHECKED)
+      else:
+         store_cfg_value(DIRCHKKEY, UNCHECKED)
       #remove any files from the cache that don't exist anymore
       allFiles = str(self.cache).split(',')
       self.cache = None
       for singleFile in allFiles:
          if (os.path.isfile(singleFile)):
-            if(self.cache != None):
+            if (self.cache != None):
                self.cache = self.cache + ','
             else:
                self.cache = ''
@@ -131,6 +145,7 @@ class FlingIcon(QtGui.QSystemTrayIcon):
       #store all the files that have been flung
       store_cfg_value(CACHEKEY, self.cache)
       #exit cleanly
+      self.flingtimer.stop()
       app.quit()
       sys.exit(app.exec_())
 
@@ -186,33 +201,44 @@ class FlingIcon(QtGui.QSystemTrayIcon):
                self.guid = str(resp[GUIDKEY])
       #store the selected value in the configuration file
       store_cfg_value(NAMEKEY, sel)
-      if (self.flingdir != None and self.INIT_COMPLETE):
-         self.prepDirFling()
+      if (self.flingdir != None):
+         self.resetFlingDir()
 
-   def flingDir(self):
+   def toggleFlingDir(self):
+      #if checked and no folder selected yet, launch the directory dialog selection
+      if (self.togdir.isChecked() and self.flingdir == None):
+         self.setFlingDir()
+      elif (not self.togdir.isChecked()):
+         self.flingtimer.stop()
+      else:
+         self.flingtimer.start(TIMERDELAY)
+
+   def setFlingDir(self):
       try:
          fileNames = None
          dir = QtGui.QFileDialog.getExistingDirectory(parent=None,
                caption='Select directory to Fling from...', directory=QtCore.QDir.currentPath())
          if (dir):
             self.flingdir = dir
-            self.prepDirFling()
+            self.resetFlingDir()
             #store the selected directory in the configuration file
             store_cfg_value(DIRKEY, self.flingdir)
+            self.togdir.setChecked(True)
 
       except Exception, e:
          print str(e)
 
-   def prepDirFling(self):
+   def resetFlingDir(self):
       #make sure the timer is stopped
       self.flingtimer.stop()
       #clear the cached flings
       self.cache = None
       #install timer to check for files and fling them
-      self.flingtimer.start(5000)
+      if (self.togdir.isChecked()):
+         self.flingtimer.start(TIMERDELAY)
 
    def servDir(self, dir=None):
-      if(dir == None):
+      if (dir == None):
          dir = str(self.flingdir)
       fileNames = os.listdir(dir)
       if fileNames:
@@ -222,7 +248,7 @@ class FlingIcon(QtGui.QSystemTrayIcon):
                #if file name already flung, don't fling it
                if (str(self.cache).find(fullPath) == -1):
                   #add the file to the cache file
-                  if(self.cache != None):
+                  if (self.cache != None):
                      self.cache = self.cache + ','
                   else:
                      self.cache = ''
@@ -232,7 +258,7 @@ class FlingIcon(QtGui.QSystemTrayIcon):
             elif (os.path.isdir(fullPath)):
                self.servDir(fullPath)
 
-   def flingFile(self):
+   def setFlingFiles(self):
       try:
          fileNames = []
          fileNames = QtGui.QFileDialog.getOpenFileNames(parent=None,
