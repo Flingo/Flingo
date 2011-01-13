@@ -110,6 +110,8 @@ class FlingIcon(QtGui.QSystemTrayIcon):
       #timer for flinging from directory (updates as files are added)
       self.flingtimer = QtCore.QTimer()
       QtCore.QObject.connect(self.flingtimer, QtCore.SIGNAL('timeout()'), self.servDir)
+      #initialize the guid, used later for flinging to single devices
+      self.guid = None
       #add detected devices to the list
       self.getDevices()
       #quit option in menu
@@ -117,8 +119,6 @@ class FlingIcon(QtGui.QSystemTrayIcon):
       self.connect(quit,QtCore.SIGNAL('triggered()'),self.quitApp)
       #initialize what files have been flung
       self.cache = CACHE
-      #initialize the guid, used later for flinging to single devices
-      self.guid = None
       #initialize the fling directory for use with flung directory contents
       self.flingdir = DIR_PATH
       #start the timer if a directory was loaded from the configuration file
