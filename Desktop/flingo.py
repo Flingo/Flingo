@@ -294,7 +294,9 @@ class FlingIcon(QtGui.QSystemTrayIcon):
          if (self.guid != None):
             params['guid'] = '%s' % self.guid
          data = urllib.urlencode(params)
-         req = urllib2.Request(FLING_URL, data)
+         newurl = "http://flingo.tv/fling/fling?" + data
+         #req = urllib2.Request(FLING_URL, data)
+         req = urllib2.Request(newurl)
          response = urllib2.urlopen(req).read()
       except Exception, e:
          print str(e)
