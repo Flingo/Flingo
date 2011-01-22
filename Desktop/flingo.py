@@ -227,10 +227,10 @@ class FlingIcon(QtGui.QSystemTrayIcon):
          self.menu.setDisabled(False)
          if (dir):
             self.flingdir = dir
-            self.resetFlingDir()
             #store the selected directory in the configuration file
             store_cfg_value(DIRKEY, self.flingdir)
             self.togdir.setChecked(True)
+            self.resetFlingDir()
          #if the user clicks cancel on the dialog AND a directory wasn't already selected, uncheck the Fling Directory option
          elif(self.flingdir == None):
             self.togdir.setChecked(False)
