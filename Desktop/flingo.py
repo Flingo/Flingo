@@ -314,7 +314,8 @@ class FlingIcon(QtGui.QSystemTrayIcon):
          name = os.path.basename(fileName)
          #http://flingo.tv/fling/fling?[url=U | deofuscator=D&context=C][&guid=G&title=T&description=D&image=I&preempt=P]
          params = {}
-         params['url'] = 'http://' + get_local_ip() +':' + str(PORT) + fileName
+         ip = get_local_ips()[0]
+         params['url'] = 'http://' + ip +':' + str(PORT) + fileName
          params['description'] = 'Desktop Fling of %s from %s' % (name, socket.gethostname())
          params['title'] = '%s via Desktop Fling' % name
          if (self.guid != None):
