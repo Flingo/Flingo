@@ -28,7 +28,7 @@ for them to once again be discoverable.
 """
 
 
-FLING_ADDR_BASE = 'http://dave.flingo.tv'
+FLING_ADDR_BASE = 'http://flingo.tv'
 SERVICE_CHECK = FLING_ADDR_BASE + '/fling/has_services'
 
 # has_devices may be deprecated in favor of has_services since has_services
