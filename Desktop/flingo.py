@@ -86,7 +86,7 @@ ACTSETDIR  = 'Set Directory'
 ACTQUIT = 'Quit'
 #keys in the configuration file
 NAMEKEY = 'name'
-GUIDKEY = 'model_id'
+GUIDKEY = 'guid'
 DIRKEY  = 'directory'
 DIRCHKKEY = 'flingdir'
 CACHEKEY= 'cache'
