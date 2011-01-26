@@ -27,7 +27,7 @@ You may have to restart Flingo appliations or devices
 for them to once again be discoverable.
 """
 
-FLING_ADDR_BASE = 'http://dave.flingo.tv'
+FLING_ADDR_BASE = 'http://flingo.tv'
 
 def call( f, kwargs = None):
     url = FLING_ADDR_BASE + '/fling/' + f
