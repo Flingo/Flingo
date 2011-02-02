@@ -6,7 +6,7 @@
 # author: Omar Zennadi, David Harrison, Andrew Mansfield
 
 import json
-import netifaces
+
 try:
     from netifaces import interfaces, ifaddresses
     found_netifaces = True
