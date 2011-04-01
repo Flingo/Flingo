@@ -3,10 +3,10 @@
 # Copyright(c) 2010. Free Stream Media Corp. Released under the terms
 # of the GNU General Public License version 2.0.
 #
-# author: Omar Zennadi, David Harrison, AMansfield
+# author: Omar Zennadi, David Harrison, Andrew Mansfield
 
 import json
-import netifaces
+
 try:
     from netifaces import interfaces, ifaddresses
     found_netifaces = True
@@ -95,7 +95,7 @@ CHECKED = 'Checked'
 UNCHECKED = 'Unchecked'
 #initialize the configuration file and get the values
 config = find_config()
-PORT = int(config.get('port', 8080))
+PORT_BASE = int(config.get('port', 8080))
 FLING_ADDR_BASE = config.get('host', 'http://flingo.tv')
 DEV_NAME = config.get(NAMEKEY, None)
 DIR_PATH = config.get(DIRKEY, None)
@@ -108,6 +108,8 @@ DEVICE_LOOKUP = FLING_ADDR_BASE + '/fling/lookup'
 FLING_URL = FLING_ADDR_BASE + '/fling/fling'
 #timer delay for polling the flung directory
 TIMERDELAY = 5000
+#list of (Windows) partitions to serve from
+drives = []
 
 class FlingIcon(QtGui.QSystemTrayIcon):
    def __init__(self, parent=None):
@@ -310,20 +312,22 @@ class FlingIcon(QtGui.QSystemTrayIcon):
    def fling(self, fileName):
       print "fling %s" % fileName
       try:
-         if sys.platform=='win32':
-            fileName = fileName.replace('C:','')
+         port = PORT_BASE
+         if sys.platform == 'win32':
+            port = port + drives.index(os.path.splitdrive(fileName)[0] + '\\')
+            fileName = fileName.replace(os.path.splitdrive(fileName)[0], '')
             fileName = fileName.replace('\\', '/')
          name = os.path.basename(fileName)
          #http://flingo.tv/fling/fling?[url=U | deobfuscator=D&context=C][&guid=G&title=T&description=D&image=I&preempt=P]
          params = {}
          ip = get_local_ips()[0]
-         params['url'] = 'http://' + ip +':' + str(PORT) + fileName
+         params['url'] = 'http://' + ip +':' + str(port) + fileName
          params['description'] = 'Desktop Fling of %s from %s' % (name, socket.gethostname())
          params['title'] = '%s via Desktop Fling' % name
          if (self.guid != None):
             params['guid'] = '%s' % self.guid
          data = urllib.urlencode(params)
-         newurl = "http://flingo.tv/fling/fling?" + data
+         newurl = FLING_URL + '?' + data
          #req = urllib2.Request(FLING_URL, data)
          print "flinging url=%s" % newurl
          req = urllib2.Request(newurl)
@@ -334,14 +338,21 @@ class FlingIcon(QtGui.QSystemTrayIcon):
 print "Creating FlingIcon"
 i = FlingIcon()
 i.show()
-root = '/'
-if sys.platform == 'win32':
-   root = 'C:\\'
-doc_root = File(root)
 
-print "Starting reactor"
-site = Site(doc_root)
-reactor.listenTCP(PORT, site)
+if sys.platform == 'win32':
+   for L in range(ord('A'), ord('Z')+1):
+      drive = chr(L) + ':\\'
+      if(os.path.exists(drive)):
+         drives.append(drive)
+else:
+   drives.append('/')
+port_inc = 0
+for root in drives:
+   doc_root = File(root)
+   site = Site(doc_root)
+   reactor.listenTCP(PORT_BASE+port_inc, site)
+   port_inc = port_inc + 1
 if sys.platform == 'darwin':
     app.exec_()
+print "Starting reactor"
 reactor.run()
