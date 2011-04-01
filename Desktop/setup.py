@@ -20,9 +20,9 @@ if sys.platform == 'darwin':
     REC = ['py2app', 'Twisted']  #, 'qt4reactor']
     setup(
         app=APP,
-    	data_files=DATA_FILES,
-    	options={'py2app': OPTIONS},
-    	setup_requires=REC,
+        data_files=DATA_FILES,
+        options={'py2app': OPTIONS},
+        setup_requires=REC,
     )
 else:
     # I get "invalid argument" when I include "bundle_files" : 1 with

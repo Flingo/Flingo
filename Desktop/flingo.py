@@ -305,14 +305,16 @@ class FlingIcon(QtGui.QSystemTrayIcon):
                self.fling(str(fileName))
       except Exception, e:
          print str(e)
+
    #makes the actual "API" call to fling the file to the selected device(s)
    def fling(self, fileName):
+      print "fling %s" % fileName
       try:
          if sys.platform=='win32':
             fileName = fileName.replace('C:','')
             fileName = fileName.replace('\\', '/')
          name = os.path.basename(fileName)
-         #http://flingo.tv/fling/fling?[url=U | deofuscator=D&context=C][&guid=G&title=T&description=D&image=I&preempt=P]
+         #http://flingo.tv/fling/fling?[url=U | deobfuscator=D&context=C][&guid=G&title=T&description=D&image=I&preempt=P]
          params = {}
          ip = get_local_ips()[0]
          params['url'] = 'http://' + ip +':' + str(PORT) + fileName
@@ -323,6 +325,7 @@ class FlingIcon(QtGui.QSystemTrayIcon):
          data = urllib.urlencode(params)
          newurl = "http://flingo.tv/fling/fling?" + data
          #req = urllib2.Request(FLING_URL, data)
+         print "flinging url=%s" % newurl
          req = urllib2.Request(newurl)
          response = urllib2.urlopen(req).read()
       except Exception, e:
