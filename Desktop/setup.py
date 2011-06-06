@@ -12,6 +12,8 @@ import sys
 import os
 from setuptools import setup, extension
 
+sys.argv.append('py2exe')
+
 DATA_FILES = ['flingo.png', 'flingo.conf']
 
 if sys.platform == 'darwin':
@@ -21,32 +23,30 @@ if sys.platform == 'darwin':
     setup(
         app=APP,
         data_files=DATA_FILES,
-        options={'py2app': OPTIONS},
+        options={'py2app':OPTIONS},
         setup_requires=REC,
     )
 else:
     # I get "invalid argument" when I include "bundle_files" : 1 with
     # ms_data as defined using the glob. It doesn't matter whether setup
-    # is importaed from distutils.core or setuptools.
-    #from distutils.core import setup
+    # is imported from distutils.core or setuptools.
     import py2exe
     from glob import glob
-    path = os.path.join(os.getcwd(), r'Microsoft.VC90.CRT')
-    ms_data = DATA_FILES + [("Microsoft.VC90.CRT", glob(path + r'\*.*'))]
-    #ms_data = DATA_FILES  + ["msvcr90.dll", "msvcp90.dll", "msvcm90.dll", "Manifest.manifest",]
-    print "ms_data=", ms_data
-    OPTIONS = {"includes" : ["sip", "PyQt4"], "packages" : ["twisted", "qt4reactor"], "bundle_files": 1}
+    path = os.path.join(os.getcwd(), "Microsoft.VC90.CRT")
+    sys.path.append(path)
+    ms_data = DATA_FILES  + [("Microsoft.VC90.CRT", glob(path + r'\*.*'))]
 
-    # The next line compiles, but doesn't bundle an appropriate runtime with the exe.
-    #OPTIONS = {"includes" : ["sip", "PyQt4"], "packages" : ["twisted", "qt4reactor"]}
+    #print "ms_data=", ms_data
+    OPTIONS = {"includes" : ["sip", "PyQt4"], "packages" : ["twisted", "qt4reactor"], 'bundle_files': 1}
     REC = ["py2exe"]
- 
+
+    # If zipfile is None then I get a flingo.exe that won't execute.  I get an
+    # error "Bug: Invalid script resource"
     setup(
         windows=[{"script": "flingo.py", "icon_resources": [(0, "flingo.ico")]}],
         data_files=ms_data,
-        options={"py2exe" : OPTIONS},
-        zipfile=None,
+        options={'py2exe' : OPTIONS},
+        zipfile="library.zip",
     )
 
-    print "end of setup.py"
 
