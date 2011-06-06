@@ -1,4 +1,12 @@
-; FLING install test.
+; DAVE'S NOTE: This was an initial installer I wrote for a different project
+; and then mapped to Flingo, but Omar Zennadi decided to write his own. 
+; This script has some useful features that could be added to the main
+; flingo.nsi script or this one could replace Omar's.  In particular, this
+; install fling menu items that appear on the pop-up menu when you right-click
+; on a file in Windows Explorer.
+
+; Flingo for Desktop Installer
+;
 ; This script uses MUI.  Docs for MUI can be found at 
 ;  http://nsis.sourceforge.net/Docs/Modern%20UI/Readme.html
 ;
@@ -6,14 +14,34 @@
 ; Copyright(C) 2009. 2010. Freestream Media Corp.  Released under the
 ; terms of GPL v2.0.
 ;
+; To build an nsis installer, start the "nullsoft scriptable install system."
+; Click on "Compile NSI scripts."  This opens a dialog title "MakeNSISW."
+; Drag and drop the flingo.nsi file onto this dialog.
+; Once complete a setup.exe file will reside in Flingo\Desktop\nsis
+
+
+
+; Normal location for settings in the windows registry:
+;   HKEY_CURRENT_USER\Software\Vendor's name\Application's name\Version\Setting name
+;
+; HKCU is short for HKEY_CURRENT_USER. 
+; In the flingo case, we combine "Vendor's name" and "Application's name."  For
+; now I won't worry about version number.
+;
+;   HKEY_CURRENT_USER\Software\flingo\0.2\Setting name
+;
+; i.e.,
+;
+;   HKEY_CURRENT_USER\Software\${PRODUCT_NAME}\Setting name
+;   
 ; Author: David Harrison
 
 !define TEMP1 $R0 ;Temp variable
  
 ; HM NIS Edit Wizard helper defines
-!define PRODUCT_NAME "Flingo"
-!define PRODUCT_VERSION "0.1"
-!define PRODUCT_PUBLISHER "flingo.org"
+!define PRODUCT_NAME "flingo_test"
+!define PRODUCT_VERSION "v0.2"
+!define PRODUCT_PUBLISHER "Flingo"
 !define PRODUCT_WEB_SITE "http://flingo.org"
 !define PRODUCT_DIR_REGKEY "Software\Microsoft\Windows\CurrentVersion\App Paths\flingo.exe"
 !define PRODUCT_UNINST_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}"
@@ -26,6 +54,9 @@
 ; MUI 1.67 compatible ------
 !include "MUI.nsh"
 
+;Request application privileges for Windows Vista
+RequestExecutionLevel admin
+
 ; MUI Settings
 !define MUI_ABORTWARNING
 !define MUI_ICON "${NSISDIR}\Contrib\Graphics\Icons\modern-install.ico"
@@ -33,7 +64,7 @@
 
 ;Order of pages
 !insertmacro MUI_PAGE_WELCOME
-!insertmacro MUI_PAGE_LICENSE "flingo_eula.rtf"
+;!insertmacro MUI_PAGE_LICENSE "flingo_eula.rtf"
 !insertmacro MUI_PAGE_DIRECTORY
 Page custom SetCustom "" ""
 !insertmacro MUI_PAGE_INSTFILES
@@ -47,27 +78,33 @@ Page custom SetCustom "" ""
 ; MUI end ------
 
 Name "${PRODUCT_NAME} ${PRODUCT_VERSION}"
-OutFile "Setup.exe"
+OutFile "setup.exe"
 
 ; Default install directory.
-InstallDir "$PROGRAMFILES\Flingo"
+InstallDir "$PROGRAMFILES\flingo"
+; InstallDirRegKey tells installer to check a string in the registry
+; and use it for the install dir if that string is valid, it will
+; override the InstallDir attribute if the registry key is valid,
+; otherwise it will fall back to the InstallDir default. 
 InstallDirRegKey HKLM "${PRODUCT_DIR_REGKEY}" ""
 ShowInstDetails show
 ShowUnInstDetails show
 
+; "File" adds file(s) to be extracted to OutPath. /r = recursive
 Section "MainSection" SEC01
   SetOutPath "$INSTDIR"
   SetOverwrite ifnewer
-  ;File "release\flingo.exe"
-  File "debug\flingo.exe"   ; "File" adds a file to be extracted to the OutPath.
-  File "Readme.txt"
-  File "flingo_eula.rtf"
+  File /r "..\dist\*.*"  
+  ;File "Readme.txt"
 SectionEnd
  
  
 Section -AdditionalIcons 
   WriteIniStr "$INSTDIR\${PRODUCT_NAME}.url" "InternetShortcut" "URL" "${PRODUCT_WEB_SITE}"
-  CreateShortCut "$SMPROGRAMS\flingo\Website.lnk" "$INSTDIR\${PRODUCT_NAME}.url"
+  CreateShortCut "$SMPROGRAMS\flingo\Website.lnk" "$INSTDIR\${PRODUCT_NAME}.url" 
+
+  # The "..\flingo.icns" in the next line appears to have no effect.
+  #CreateShortCut "$SMPROGRAMS\flingo\Website.lnk" "$INSTDIR\${PRODUCT_NAME}.url" "..\flingo.icns"
   CreateShortCut "$SMPROGRAMS\flingo\Uninstall.lnk" "$INSTDIR\uninst.exe"
 SectionEnd
 
@@ -82,6 +119,13 @@ Section -Post
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "URLInfoAbout" "${PRODUCT_WEB_SITE}"
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "Publisher" "${PRODUCT_PUBLISHER}////"
 
+  ; add default settings.  In Linx these settings are found in the flingo.conf file.
+  WriteRegStr HKLM "Software\${PRODUCT_NAME}" "name" "All Devices"
+  WriteRegStr HKLM "Software\${PRODUCT_NAME}" "cache" "None"
+  WriteRegStr HKLM "Software\${PRODUCT_NAME}" "host" "http://flingo.tv"
+  WriteRegStr HKLM "Software\${PRODUCT_NAME}" "flingdir" "Unchecked"
+  WriteRegStr HKLM "Software\${PRODUCT_NAME}" "port" "8080"
+
   ; add explorer pop-up menus for types handled by flingo.
   ${addExplorerPopUpMenuItem} ".asf"  "Advanced Systems Format File" "flingo" "Fling to TV or media device..." "$INSTDIR\flingo.exe $\"%L$\"" 
   ${addExplorerPopUpMenuItem} ".avi"  "AVI File" "flingo" "Fling to TV or media device..." "$INSTDIR\flingo.exe $\"%L$\"" 
@@ -89,8 +133,8 @@ Section -Post
   ${addExplorerPopUpMenuItem} ".dvx"  "DivX Video File" "flingo" "Fling to TV or media device..."  "$INSTDIR\flingo.exe $\"%L$\""
   ${addExplorerPopUpMenuItem} ".mkv"  "Matroska Video File" "flingo" "Fling to TV or media device..." "$INSTDIR\flingo.exe $\"%L$\"" 
   ${addExplorerPopUpMenuItem} ".mp4"  "MPEG-4 Video File" "flingo" "Fling to TV or media device..."  "$INSTDIR\flingo.exe $\"%L$\""
-  ${addExplorerPopUpMenuItem} ".m4v"  "MPEG-4 Video File" "flingo" "Fling to TV or media device..."
-  ${addExplorerPopUpMenuItem} ".m4a"  "MPEG-4 Audio File" "flingo" "Fling to TV or media device..."
+  ${addExplorerPopUpMenuItem} ".m4v"  "MPEG-4 Video File" "flingo" "Fling to TV or media device..." "$INSTDIR\flingo.exe $\"%L$\"" 
+  ${addExplorerPopUpMenuItem} ".m4a"  "MPEG-4 Audio File" "flingo" "Fling to TV or media device..." "$INSTDIR\flingo.exe $\"%L$\"" 
   ${addExplorerPopUpMenuItem} ".mov"  "QuickTime Movie" "flingo" "Fling to TV or media device..."  "$INSTDIR\flingo.exe $\"%L$\""
   ${addExplorerPopUpMenuItem} ".moov" "QuickTime Movie" "flingo" "Fling to TV or media device..."  "$INSTDIR\flingo.exe $\"%L$\""
   ${addExplorerPopUpMenuItem} ".3gp"  "3GPP Multimedia File" "flingo" "Fling to TV or media device..."  "$INSTDIR\flingo.exe $\"%L$\""
@@ -194,6 +238,7 @@ Section Uninstall
 
   DeleteRegKey ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}"
   DeleteRegKey HKLM "${PRODUCT_DIR_REGKEY}"
+  DeleteRegKey HKLM "Software\${PRODUCT_NAME}"
 
   # Remove Explorer right-click menu items for types known to be handled by flingo and
   # restore file associations.

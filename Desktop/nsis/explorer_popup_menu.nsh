@@ -23,10 +23,21 @@
 ;   unique_typename: "MKVAPP"
 ;   menu_item: "Send to MKV App"
 ;
+
+;HEREPOOP! Why doesn't this work?  Is it getting executed?  How do I debug NSIS?
+;Maybe some way to popup an alert?
+; I modified the registry directly and was able to add a command "blah" 
+; (see HKCR/flingo/shell/blah/command) that runs 
+; Flingo successfully, but I need to make sure Flingo handles command-line arguments
+; correctly.  Before I do that, I need to figure out why this function DIDN'T
+; create the same mapping.
 !macro addExplorerPopUpMenuItem extension description unique_typename menu_item app_path
 !define Index "Line${__LINE__}"
   Push $1  ; save so don't interfere with caller.  Locally used for type_name.
-  ReadRegStr $1 HKCR "${extension}" ""   
+  ReadRegStr $1 HKCR "${extension}" ""  
+  ; StrCmp $x $y jump_if_equal jump_if_not   
+  ; means if x == y then jump to jump_if_equal else jump_if_not 
+  ; The zero means execute the following line.
   StrCmp $1 "" 0 "${Index}-add_menu_item"
   ${registerExtension} "${app_path}" "${extension}" "${description}" "${unique_typename}"
 

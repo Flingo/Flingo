@@ -33,7 +33,7 @@
 ;   ${registerExtension} "$INSTDIR\fling.exe" ".bfloog" "BitFloogie File" "FLING"
 ;
 ;  creates
-;    HKCR/.bfloog/""                  FLING
+;    HKCR/.bfloog/""                    FLING
 ;    HKCR/FLING/""                      BitFloogie File
 ;    HKCR/FLING/"Default Icon"          "C:\Program Files\FLING\fling.exe,0"
 ;    HKCR/FLING/shell/""                open
