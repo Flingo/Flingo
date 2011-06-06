@@ -17,6 +17,7 @@ except ImportError,e:
     print "Using the less reliable socket.gethostbyname to determine ip address."
     found_netifaces = False
 
+import shutil
 import os
 import qt4reactor
 import socket
@@ -31,8 +32,8 @@ from twisted.internet import reactor
 from twisted.web.server import Site
 from twisted.web.static import File
 #get the values from the configuration file
-def update_config(conf_file, config={}):
-   c = config
+def update_config(conf_file):
+   c = {}
    if conf_file and os.path.isfile(conf_file):
       rv = RawConfigParser()
       rv.read(conf_file)
@@ -45,11 +46,14 @@ def update_config(conf_file, config={}):
    return c
 #find the configuration file
 def find_config():
-    config = update_config('flingo.conf')
-    conf = os.getenv('FLING_CONF', default='')
-    if conf:
-        config = update_config(conf, config)
-    return config
+    conf = os.getenv('FLING_CONF', 'flingo.conf')
+    if sys.platform == 'win32':
+        conf = os.environ['APPDATA'] + '\\flingo\\' + conf
+        if (not os.path.exists(os.path.dirname(conf))):
+            os.mkdir(os.path.dirname(conf))
+        if (not os.path.isfile(conf)):
+            shutil.copyfile('flingo.conf', conf)
+    return conf
 
 def get_local_ips():
    """Returns the set of known local IP addresses excluding the loopback 
@@ -71,7 +75,7 @@ def get_local_ips():
 
 #store configuration file values, used at cleanup when exiting
 def store_cfg_value(key, value=None):
-   cfg_file = 'flingo.conf'
+   cfg_file = find_config()
    if cfg_file and os.path.isfile(cfg_file):
       cfgprsr = RawConfigParser()
       cfgprsr.read(cfg_file)
@@ -94,7 +98,7 @@ CACHEKEY= 'cache'
 CHECKED = 'Checked'
 UNCHECKED = 'Unchecked'
 #initialize the configuration file and get the values
-config = find_config()
+config = update_config(find_config())
 PORT_BASE = int(config.get('port', 8080))
 FLING_ADDR_BASE = config.get('host', 'http://flingo.tv')
 DEV_NAME = config.get(NAMEKEY, None)
