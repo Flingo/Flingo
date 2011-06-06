@@ -60,26 +60,34 @@ Obtain source code as described in the steps presented in "Build from Source."
 
 Then install py2exe from
 
-  http://www.py2exe.org/
+  http://www.py2exe.org/      (I installed py2exe-0.6.9.win32-py2.6.exe)
 
 Then install twisted.
 
-  http://twistedmatrix.com/trac/
+  http://twistedmatrix.com/trac/  (I installed Twisted-11.0.0.winxp32-py2.6.msi)
 
 Twisted requires zope.
 
-  easy_install zope.interface
+  easy_install zope.interface  (I installed zope.interface-3.6.1-py2.6-win32.egg)
 
 Install Qt.  I downloaded the windows installer which includes all of
 the components to build using Qt including PyQt.
 
   http://www.riverbankcomputing.co.uk/software/pyqt/download
 
+  (I installed PyQt-Py2.6-x86-gpl-4.8.3-1.exe)
+
+flingo uses netifaces for determining information about network interfaces.
+
+  easy_install netifaces
+
 From the command prompt change into the directory where you downloaded
 the Flingo Desktop sources.
 
   cd Flingo\Desktop
-  python setup.py
+  python setup.py py2exe
+
+py2exe outputs an executable to directory dist\flingo.exe
 
 If py2exe fails because you do not have MSVCM90.DLL then at least as
 of this writing, you can install Microsoft Visual Studio C++ Express
@@ -87,6 +95,32 @@ for free from Microsoft.  In my system the necessary DLLs were
 installed in the directory  
 
   C:\Windows\winsxs\x86_microsoft.vc90.crt_1fc8b3b9a1e18e3b_9.0.30729.4974_none_50940634bcb759cb\
+
+Once you have the executable, when double-clicked it should run and create 
+the fling icon in the systray.  However, the executable is not enough.
+We need an installer to create a "flingo" directory in "Program Files,"
+to create icons in the "Start Menu."
+
+We uses NSIS to build the installer and uninstaller for MS Windows.  
+
+In Windows I currently have NSIS 2.46 installed which can be obtained from http://nsis.sourceforge.net/Main_Page
+
+Once NSIS is installed, you can compile the installer by following these
+steps:
+
+1. In Windows Explorer, navigate to the directory where you downloaded 
+   the Flingo repositroy and then into the Desktop subdirectory.
+2. Right-click on the flingo.nsi file and select "Compile NSIS script." 
+   This opens a window titled "MakeNSISW" which shows output from the 
+   build process.
+3. When the build completes, the "close" button ungrays.  Now a file 
+   setup.exe should appear in the Flingo/Desktop directory.
+4. The resulting setup.exe encapsulates all that is necessary to install 
+   or uninstall the desktop version of Flingo. 
+
+NOTE: If I (Dave) run the installer directly from Flingo/Desktop then I get 
+an error "Y:\Flingo\Desktop\setup.exe. The specified path does not exist."  
+However, if copy the setup.exe onto the desktop and run it then it works.  
 
 
 Build from source for Mac OS X
