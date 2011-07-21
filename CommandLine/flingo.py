@@ -13,10 +13,46 @@ from urllib import quote
 import SimpleHTTPServer
 import SocketServer
 
+# In OS X, the following doesn't work as desired:
+#   dname, temp, ips = socket.gethostbyname_ex(socket.gethostname())
+# ips contains the array ["127.0.0.1"] rather than a list of 
+# interfaces on this device.  To solve this problem I use netifaces.
+try:
+    from netifaces import interfaces, ifaddresses
+    found_netifaces = True
+except ImportError,e:
+    print "WARNING! Failed to import netifaces.  You can obtain netifaces on Windows "
+    print "and OSX by running:"
+    print "  easy_install netifaces"
+    print "Using the less reliable socket.gethostbyname to determine ip address."
+    found_netifaces = False
+
+
+
+
 # default port.
 PORT = 18761
 
 #image_ext = [ ".png", ".jpeg", ".jpg", ".gif" ]
+
+def get_local_ips():
+   """Returns the set of known local IP addresses excluding the loopback 
+      interface."""
+   global found_netifaces
+   ips = []
+   if found_netifaces:
+       ifs = [ifaddresses(i).get(socket.AF_INET,None) for i in interfaces()]
+       ifs = [i for i in ifs if i]
+       ips = []
+       for i in ifs:
+         ips.extend([j.get('addr',None) for j in i])
+       ips = [i for i in ips if i and i != "127.0.0.1"]
+   if not found_netifaces or not ips:
+       ip = socket.gethostbyname(socket.gethostname())
+       if ip != "127.0.0.1":
+         ips.append(ip)
+   return ips
+
 
 # If no title then the filename is used as the title.
 # If no description then a description is generated that states
@@ -36,14 +72,20 @@ def fling( path, port=PORT, title=None, description=None ):
   if not d:
     d = os.getcwd()
 
-  dname, temp, ips = socket.gethostbyname_ex(socket.gethostname())
+  dname = socket.gethostname()
+  ips = get_local_ips()
   ip = ips[0]  # HEREDAVE: need to be smarter.
 
   if not title:
     title = fname
 
-  flung_across_lan = "Flung across local network from machine %s" % (
-    "with name %s at ip address %s." % ( dname, ip ))
+  if dname and dname != "localhost":
+    flung_across_lan = "Flung across local network from machine %s" % (
+      "with name %s at ip address %s." % ( dname, ip ))
+  else:
+    flung_across_lan = "Flung across local network from machine %s " % (
+      "with ip address %s." % ip)
+
   if not description: 
     description = ""
   description += flung_across_lan
