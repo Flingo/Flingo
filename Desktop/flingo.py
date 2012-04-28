@@ -343,6 +343,8 @@ print "Creating FlingIcon"
 i = FlingIcon()
 i.show()
 
+# I think it is a bad idea to serve an entire drive.  Exposes entire
+# hard drive to malicious software in the networ.  --Dave
 if sys.platform == 'win32':
    for L in range(ord('A'), ord('Z')+1):
       drive = chr(L) + ':\\'
