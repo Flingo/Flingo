@@ -1,6 +1,12 @@
 Requires the TV or other device to have a Flingo-enabled application that pulls
 the queue call from the Flingo backend.
 
+* Flingo/Automator
+
+  Fling items to the front or back of your queue from your Mac Finder
+  simply by right-clicking a file and select "Fling to the front of queue"
+  or "Fling to the back of queue".
+
 * Flingo/Desktop
 
   Fling items from your personal computer's file system to the TV.
