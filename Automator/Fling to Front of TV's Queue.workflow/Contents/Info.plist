@@ -8,7 +8,7 @@
 			<key>NSMenuItem</key>
 			<dict>
 				<key>default</key>
-				<string>Fling to front of queue</string>
+				<string>Fling to Front of TV's Queue</string>
 			</dict>
 			<key>NSMessage</key>
 			<string>runWorkflowAsService</string>
