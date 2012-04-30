@@ -52,7 +52,7 @@
 				<dict>
 					<key>fileNames</key>
 					<array>
-						<string>~/Downloads/Supernatural.S07E20.HDTV.x264-LOL.mp4</string>
+						<string>~/Downloads/Grimm.S01E19.HDTV.x264-LOL.[VTV].mp4</string>
 					</array>
 				</dict>
 				<key>BundleIdentifier</key>
@@ -70,9 +70,9 @@
 				<key>Class Name</key>
 				<string>SpecifiedFilesAction</string>
 				<key>Disabled</key>
-				<true/>
+				<false/>
 				<key>InputUUID</key>
-				<string>635FAFDF-F0C8-457F-B460-8C399303ECC9</string>
+				<string>64F18F96-6722-49C4-A4C3-BB1388C3D079</string>
 				<key>Keywords</key>
 				<array>
 					<string>File</string>
@@ -81,9 +81,9 @@
 					<string>Get</string>
 				</array>
 				<key>OutputUUID</key>
-				<string>4B8903B3-EE03-452D-B575-45E10B5A2AE1</string>
+				<string>14A8823B-E406-4AF9-B43A-E86B3A619F10</string>
 				<key>UUID</key>
-				<string>C88C5E1F-115F-4D42-A4CF-6C83C6DE598D</string>
+				<string>2572FF90-E3CD-4B85-8842-18EC341FD4F5</string>
 				<key>UnlocalizedApplications</key>
 				<array>
 					<string>Finder</string>
@@ -105,187 +105,11 @@
 					</dict>
 				</dict>
 				<key>isViewVisible</key>
-				<false/>
+				<true/>
 				<key>location</key>
-				<string>336.000000:468.000000</string>
+				<string>336.000000:571.000000</string>
 				<key>nibPath</key>
 				<string>/System/Library/Automator/Get Specified Finder Items.action/Contents/Resources/English.lproj/main.nib</string>
-			</dict>
-			<key>isViewVisible</key>
-			<false/>
-		</dict>
-		<dict>
-			<key>action</key>
-			<dict>
-				<key>AMAccepts</key>
-				<dict>
-					<key>Container</key>
-					<string>List</string>
-					<key>Optional</key>
-					<false/>
-					<key>Types</key>
-					<array>
-						<string>com.apple.cocoa.path</string>
-					</array>
-				</dict>
-				<key>AMActionVersion</key>
-				<string>2.1</string>
-				<key>AMApplication</key>
-				<array>
-					<string>Finder</string>
-				</array>
-				<key>AMParameterProperties</key>
-				<dict>
-					<key>itemType</key>
-					<dict/>
-					<key>predicate</key>
-					<dict/>
-				</dict>
-				<key>AMProvides</key>
-				<dict>
-					<key>Container</key>
-					<string>List</string>
-					<key>Types</key>
-					<array>
-						<string>com.apple.cocoa.path</string>
-					</array>
-				</dict>
-				<key>AMRequiredResources</key>
-				<array/>
-				<key>AMSelectedInputType</key>
-				<string>com.apple.cocoa.path</string>
-				<key>AMSelectedOutputType</key>
-				<string>com.apple.cocoa.path</string>
-				<key>ActionBundlePath</key>
-				<string>/System/Library/Automator/Filter Finder Items 2.action</string>
-				<key>ActionName</key>
-				<string>Filter Finder Items</string>
-				<key>ActionParameters</key>
-				<dict>
-					<key>itemType</key>
-					<string>com.apple.cocoa.path</string>
-					<key>predicate</key>
-					<data>
-					YnBsaXN0MDDUAQIDBAUGbm9YJHZlcnNpb25Y
-					JG9iamVjdHNZJGFyY2hpdmVyVCR0b3ASAAGG
-					oK8QFgcIDxQcJicpMTU6O0BESk9QVV1iZ2lV
-					JG51bGzTCQoLDA0OXxAPTlNTdWJwcmVkaWNh
-					dGVzXxAXTlNDb21wb3VuZFByZWRpY2F0ZVR5
-					cGVWJGNsYXNzgAIQAYAV0gsQERJaTlMub2Jq
-					ZWN0c4AUoROAA9QVFgsXGBkaG18QEE5TTGVm
-					dEV4cHJlc3Npb25fEBFOU1JpZ2h0RXhwcmVz
-					c2lvbl8QE05TUHJlZGljYXRlT3BlcmF0b3KA
-					BIAOgBOAEdUdHgsfICEiIyQlXxAQTlNFeHBy
-					ZXNzaW9uVHlwZV5OU1NlbGVjdG9yTmFtZVlO
-					U09wZXJhbmRbTlNBcmd1bWVudHMQA4AFgA2A
-					BoAIXHZhbHVlRm9yS2V5OtIdCw0ogAfSKiss
-					LVokY2xhc3NuYW1lWCRjbGFzc2VzXxAQTlNT
-					ZWxmRXhwcmVzc2lvbqMuLzBfEBBOU1NlbGZF
-					eHByZXNzaW9uXE5TRXhwcmVzc2lvblhOU09i
-					amVjdNILEDIzgAyhNIAJ0zYdCzc4OVlOU0tl
-					eVBhdGiAChAKgAtdZmlsZUV4dGVuc2lvbtIq
-					Kzw9XxAcTlNLZXlQYXRoU3BlY2lmaWVyRXhw
-					cmVzc2lvbqM+PzBfEBxOU0tleVBhdGhTcGVj
-					aWZpZXJFeHByZXNzaW9uXE5TRXhwcmVzc2lv
-					btIqK0FCXk5TTXV0YWJsZUFycmF5o0FDMFdO
-					U0FycmF50iorRUZfEBNOU0tleVBhdGhFeHBy
-					ZXNzaW9upEdISTBfEBNOU0tleVBhdGhFeHBy
-					ZXNzaW9uXxAUTlNGdW5jdGlvbkV4cHJlc3Np
-					b25cTlNFeHByZXNzaW9u0x1LC0xNTl8QD05T
-					Q29uc3RhbnRWYWx1ZRAAgA+AEFNtcDTSKitR
-					Ul8QGU5TQ29uc3RhbnRWYWx1ZUV4cHJlc3Np
-					b26jU1QwXxAZTlNDb25zdGFudFZhbHVlRXhw
-					cmVzc2lvblxOU0V4cHJlc3Npb27VVldYC1la
-					W0xcIV5OU09wZXJhdG9yVHlwZVhOU05lZ2F0
-					ZVpOU01vZGlmaWVyWU5TT3B0aW9ucxAECIAS
-					0iorXl9fEBtOU0VxdWFsaXR5UHJlZGljYXRl
-					T3BlcmF0b3KjYGEwXxAbTlNFcXVhbGl0eVBy
-					ZWRpY2F0ZU9wZXJhdG9yXxATTlNQcmVkaWNh
-					dGVPcGVyYXRvctIqK2NkXxAVTlNDb21wYXJp
-					c29uUHJlZGljYXRlo2VmMF8QFU5TQ29tcGFy
-					aXNvblByZWRpY2F0ZVtOU1ByZWRpY2F0ZdIq
-					K0NookMw0ioramtfEBNOU0NvbXBvdW5kUHJl
-					ZGljYXRlo2xtMF8QE05TQ29tcG91bmRQcmVk
-					aWNhdGVbTlNQcmVkaWNhdGVfEA9OU0tleWVk
-					QXJjaGl2ZXLRcHFUcm9vdIABAAgAEQAaACMA
-					LQAyADcAUABWAF0AbwCJAJAAkgCUAJYAmwCm
-					AKgAqgCsALUAyADcAPIA9AD2APgA+gEFARgB
-					JwExAT0BPwFBAUMBRQFHAVQBWQFbAWABawF0
-					AYcBiwGeAasBtAG5AbsBvQG/AcYB0AHSAdQB
-					1gHkAekCCAIMAisCOAI9AkwCUAJYAl0CcwJ4
-					Ao4CpQKyArkCywLNAs8C0QLVAtoC9gL6AxYD
-					IwMuAz0DRgNRA1sDXQNeA2ADZQODA4cDpQO7
-					A8AD2APcA/QEAAQFBAgEDQQjBCcEPQRJBFsE
-					XgRjAAAAAAAAAgEAAAAAAAAAcgAAAAAAAAAA
-					AAAAAAAABGU=
-					</data>
-				</dict>
-				<key>BundleIdentifier</key>
-				<string>com.apple.Automator.Filter_Finder_Items_2</string>
-				<key>CFBundleVersion</key>
-				<string>2.1</string>
-				<key>CanShowSelectedItemsWhenRun</key>
-				<false/>
-				<key>CanShowWhenRun</key>
-				<true/>
-				<key>Category</key>
-				<array>
-					<string>AMCategoryFilesAndFolders</string>
-				</array>
-				<key>Class Name</key>
-				<string>Filter_Finder_Items_2</string>
-				<key>InputUUID</key>
-				<string>64A69846-7E78-4BE7-B182-79F4975DD3AB</string>
-				<key>Keywords</key>
-				<array/>
-				<key>OutputUUID</key>
-				<string>F66CBFFC-50BE-4F88-9D05-038B34D8EFC8</string>
-				<key>StartAction</key>
-				<false/>
-				<key>UUID</key>
-				<string>A8615970-83D1-4CF5-8F98-74241365322C</string>
-				<key>UnlocalizedApplications</key>
-				<array>
-					<string>Finder</string>
-				</array>
-				<key>arguments</key>
-				<dict>
-					<key>0</key>
-					<dict>
-						<key>default value</key>
-						<string>com.apple.cocoa.path</string>
-						<key>name</key>
-						<string>itemType</string>
-						<key>required</key>
-						<string>0</string>
-						<key>type</key>
-						<string>0</string>
-						<key>uuid</key>
-						<string>0</string>
-					</dict>
-					<key>1</key>
-					<dict>
-						<key>default value</key>
-						<data>
-						</data>
-						<key>name</key>
-						<string>predicate</string>
-						<key>required</key>
-						<string>0</string>
-						<key>type</key>
-						<string>0</string>
-						<key>uuid</key>
-						<string>1</string>
-					</dict>
-				</dict>
-				<key>conversionLabel</key>
-				<integer>0</integer>
-				<key>isViewVisible</key>
-				<true/>
-				<key>location</key>
-				<string>336.000000:426.000000</string>
-				<key>nibPath</key>
-				<string>/System/Library/Automator/Filter Finder Items 2.action/Contents/Resources/English.lproj/main.nib</string>
 			</dict>
 			<key>isViewVisible</key>
 			<true/>
@@ -301,25 +125,17 @@
 					<true/>
 					<key>Types</key>
 					<array>
-						<string>com.apple.cocoa.string</string>
+						<string>com.apple.applescript.object</string>
 					</array>
 				</dict>
 				<key>AMActionVersion</key>
-				<string>2.0.2</string>
+				<string>1.0.1</string>
 				<key>AMApplication</key>
 				<array>
 					<string>Automator</string>
 				</array>
 				<key>AMParameterProperties</key>
 				<dict>
-					<key>COMMAND_STRING</key>
-					<dict/>
-					<key>CheckedForUserDefaultShell</key>
-					<dict/>
-					<key>inputMethod</key>
-					<dict/>
-					<key>shell</key>
-					<dict/>
 					<key>source</key>
 					<dict/>
 				</dict>
@@ -329,34 +145,22 @@
 					<string>List</string>
 					<key>Types</key>
 					<array>
-						<string>com.apple.cocoa.string</string>
+						<string>com.apple.applescript.object</string>
 					</array>
 				</dict>
 				<key>ActionBundlePath</key>
-				<string>/System/Library/Automator/Run Shell Script.action</string>
+				<string>/System/Library/Automator/Run AppleScript.action</string>
 				<key>ActionName</key>
-				<string>Run Shell Script</string>
+				<string>Run AppleScript</string>
 				<key>ActionParameters</key>
 				<dict>
-					<key>COMMAND_STRING</key>
-					<string>for f in "$@"; do
-    echo "flinging $f"
-    ~/bin/flingo.py --back "$f" &amp;
-done
-</string>
-					<key>CheckedForUserDefaultShell</key>
-					<true/>
-					<key>inputMethod</key>
-					<integer>1</integer>
-					<key>shell</key>
-					<string>/bin/bash</string>
 					<key>source</key>
-					<string></string>
+					<string>on run {input, parameters}	(* display dialog "input " &amp; input *)		repeat with f in input		ignoring white space			ignoring case				if (f as string) does not end with ".mp4" then					display dialog "Only mp4 files will play on the TV.  Not all selected files end with a .mp4 file extension."					return false				end if			end ignoring		end ignoring	end repeat		(* display dialog "Calling has_service.py" *)	set x to do shell script "/usr/bin/python /Users/dave/bin/has_service.py"	(* display dialog "After has_service.py: " &amp; x *)	ignoring white space		if x is not "true" then			display dialog "No fling-enabled devices were discovered in this network.  Are you and your TV connected to different networks?  The device flinging and the TV must share the same public IP."			return false		end if	end ignoring		(* display dialog "Flinging every file that was passed." *)	set i to 0	repeat with f in input		(* display dialog "Flinging " &amp; f *)		set s to POSIX path of f		set command to ("/usr/bin/python ~/bin/flingo.py --back " &amp; s &amp; " &amp;&gt; /tmp/flingo &amp;")		(* display dialog "Command: " &amp; command *)		do shell script command		set i to (i + 1)	end repeat	if i = 1 then	    display dialog "Fling file " &amp; f	else	    display dialog "Flung " &amp; i &amp; " files."	end if		(*return input*)end run</string>
 				</dict>
 				<key>BundleIdentifier</key>
-				<string>com.apple.RunShellScript</string>
+				<string>com.apple.Automator.RunScript</string>
 				<key>CFBundleVersion</key>
-				<string>2.0.2</string>
+				<string>1.0.1</string>
 				<key>CanShowSelectedItemsWhenRun</key>
 				<false/>
 				<key>CanShowWhenRun</key>
@@ -366,21 +170,17 @@ done
 					<string>AMCategoryUtilities</string>
 				</array>
 				<key>Class Name</key>
-				<string>RunShellScriptAction</string>
+				<string>RunScriptAction</string>
 				<key>InputUUID</key>
-				<string>FA0FB7F0-016F-4146-83D3-62DEFFD2B1C3</string>
+				<string>A2CF200C-FDEE-4C34-941F-4BE1B5B6139F</string>
 				<key>Keywords</key>
 				<array>
-					<string>Shell</string>
-					<string>Script</string>
-					<string>Command</string>
 					<string>Run</string>
-					<string>Unix</string>
 				</array>
 				<key>OutputUUID</key>
-				<string>A52D8631-8FA1-448B-BC4D-01C77C94EA3B</string>
+				<string>A9991DF5-AF56-430F-84FC-231E70236303</string>
 				<key>UUID</key>
-				<string>BF29F7C4-8D8C-4256-9BFE-2EDD5430DA30</string>
+				<string>534F46CE-C1B3-45BB-B014-11188D02F5F0</string>
 				<key>UnlocalizedApplications</key>
 				<array>
 					<string>Automator</string>
@@ -390,20 +190,12 @@ done
 					<key>0</key>
 					<dict>
 						<key>default value</key>
-						<integer>0</integer>
-						<key>name</key>
-						<string>inputMethod</string>
-						<key>required</key>
-						<string>0</string>
-						<key>type</key>
-						<string>0</string>
-						<key>uuid</key>
-						<string>0</string>
-					</dict>
-					<key>1</key>
-					<dict>
-						<key>default value</key>
-						<string></string>
+						<string>on run {input, parameters}
+	
+	(* Your script goes here *)
+	
+	return input
+end run</string>
 						<key>name</key>
 						<string>source</string>
 						<key>required</key>
@@ -411,54 +203,15 @@ done
 						<key>type</key>
 						<string>0</string>
 						<key>uuid</key>
-						<string>1</string>
-					</dict>
-					<key>2</key>
-					<dict>
-						<key>default value</key>
-						<false/>
-						<key>name</key>
-						<string>CheckedForUserDefaultShell</string>
-						<key>required</key>
 						<string>0</string>
-						<key>type</key>
-						<string>0</string>
-						<key>uuid</key>
-						<string>2</string>
-					</dict>
-					<key>3</key>
-					<dict>
-						<key>default value</key>
-						<string></string>
-						<key>name</key>
-						<string>COMMAND_STRING</string>
-						<key>required</key>
-						<string>0</string>
-						<key>type</key>
-						<string>0</string>
-						<key>uuid</key>
-						<string>3</string>
-					</dict>
-					<key>4</key>
-					<dict>
-						<key>default value</key>
-						<string>/bin/sh</string>
-						<key>name</key>
-						<string>shell</string>
-						<key>required</key>
-						<string>0</string>
-						<key>type</key>
-						<string>0</string>
-						<key>uuid</key>
-						<string>4</string>
 					</dict>
 				</dict>
 				<key>isViewVisible</key>
 				<true/>
 				<key>location</key>
-				<string>336.000000:203.000000</string>
+				<string>336.000000:333.000000</string>
 				<key>nibPath</key>
-				<string>/System/Library/Automator/Run Shell Script.action/Contents/Resources/English.lproj/main.nib</string>
+				<string>/System/Library/Automator/Run AppleScript.action/Contents/Resources/English.lproj/main.nib</string>
 			</dict>
 			<key>isViewVisible</key>
 			<true/>
@@ -466,19 +219,12 @@ done
 	</array>
 	<key>connectors</key>
 	<dict>
-		<key>14DD9859-AC5E-49C3-9378-0DEF6D9EE749</key>
+		<key>8CAD57C0-8C91-4ECE-982E-36236B9788DF</key>
 		<dict>
 			<key>from</key>
-			<string>A8615970-83D1-4CF5-8F98-74241365322C - A8615970-83D1-4CF5-8F98-74241365322C</string>
+			<string>2572FF90-E3CD-4B85-8842-18EC341FD4F5 - 2572FF90-E3CD-4B85-8842-18EC341FD4F5</string>
 			<key>to</key>
-			<string>BF29F7C4-8D8C-4256-9BFE-2EDD5430DA30 - BF29F7C4-8D8C-4256-9BFE-2EDD5430DA30</string>
-		</dict>
-		<key>7A74C2A2-051A-49A3-8935-F5628799F84B</key>
-		<dict>
-			<key>from</key>
-			<string>C88C5E1F-115F-4D42-A4CF-6C83C6DE598D - C88C5E1F-115F-4D42-A4CF-6C83C6DE598D</string>
-			<key>to</key>
-			<string>A8615970-83D1-4CF5-8F98-74241365322C - A8615970-83D1-4CF5-8F98-74241365322C</string>
+			<string>534F46CE-C1B3-45BB-B014-11188D02F5F0 - 534F46CE-C1B3-45BB-B014-11188D02F5F0</string>
 		</dict>
 	</dict>
 	<key>workflowMetaData</key>
