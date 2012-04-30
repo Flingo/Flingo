@@ -7,6 +7,7 @@
 
 import os
 import httplib
+from random import randint
 import socket
 from urlparse import urlparse
 from urllib import quote
@@ -154,8 +155,9 @@ app (called "Web Videos" on Vizio VIA TVs).  The item should appear at the front
         parser.add_option("-t", "--title", dest="title",
                           help="title of the file to be flung.", default="")
         parser.add_option("-p", "--port", dest="port",
-                          help="port number from which to serve flung files.",
-                          default=PORT)
+                          help= ( "port number from which to serve flung "
+                                  "files. By default it uses a random port."),
+                          default=-1)
         parser.add_option("-b", "--back", dest="front", action="store_false",
                           help="push to the back of the queue.", default=True )
         
@@ -166,17 +168,24 @@ app (called "Web Videos" on Vizio VIA TVs).  The item should appear at the front
             sys.exit(-1)
     
         fname = args[0]
+        if os.path.isabs(fname):
+            path, fname = os.path.split(fname)
+            os.chdir(path)
         if type(options.port) in [str,unicode]:
             options.port = int(options.port)
-        fling( fname, options.port, options.title, options.description,
+        port = options.port
+        if port == -1:
+            port = 18761 + randint(0,4000)
+        fling( fname, port, options.title, options.description,
             front = options.front )
     
         root_dir = os.getcwd()
     
         doc_root = File(root_dir)
         site = Site(doc_root)
-        reactor.listenTCP(PORT, site)
+        reactor.listenTCP(port, site)
         reactor.run()
     
     except KeyboardInterrupt:
         print '\nCTRL-C received, shutting down'
+
