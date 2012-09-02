@@ -1,0 +1,6 @@
+#!/bin/sh
+
+touch /tmp/s00-run.txt
+
+/tmp/mnt/DFA2-531C/remote_control.py &
+

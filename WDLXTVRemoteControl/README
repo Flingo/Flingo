@@ -1,0 +1,434 @@
+Extending WD TV Live with a Remote Control
+==========================================
+
+
+Installing a custom firmware and extending it.  This outlines how to 
+add a wireless remote control to the WD TV Live. It involves installing
+a custom firmware from wdlxtv, but I had no problem installing it.
+From there you can use command line tools to emulate remote control 
+behavior.  This can be extended by running daemons that can 
+respond to web requests or implement whatever other networked protocols
+you might want to.
+
+
+INSTALLATION OF WDLXTV
+----------------------
+
+I installed wdlxtv firmware onto a WD TV Live Plus model WDBABX0000NBK-00
+
+I installed it by downloading the firmware from 
+  http://forum.wdlxtv.com/viewforum.php?f=10
+
+Click on "WDTV Live Plus"
+
+I clicked on 
+
+  1.05.04_B-WDLXTV-Plus-0.5.1.1 [flash] 
+
+which downloaded the file
+
+  1.05.04_B_WDLXTV.COM_WDLXTV_PLUS-0.5.1.1.zip
+
+I unzipped the file which unzipped to the following:
+
+  Changelog    extra        wdtvlive2.bi2    wdtvlive2.fff
+  README        net.mounts    wdtvlive2.bin    wdtvlive2.ver
+
+I then followed the instructions on 
+
+  http://wiki.wdlxtv.com/Quickstart
+
+which meant I put the following files from the firmware 
+
+  wdtvlive2.bi2    wdtvlive2.bin    wdtvlive2.fff    wdtvlive2.ver
+
+into the root directory of a USB drive.
+
+I had to increment the version number in the wdtvlive2.ver file so that it
+was greater than the version in the WDTV live box.
+
+I then plugged the USB drive into the left-hand side of the WD Live Plus and
+unplugged and then replugged-in the WD Live Plus.  After booting it
+shows a screen with the text appearing on the right hand side: "New Firmware
+Found."
+
+I selected this and it installed the new firmware and rebooted.  Upon
+booting I noticed that the background had changed to wood panelling.  Now
+wdlxtv is installed!
+
+I neglected to say that I had to try this numerous times to get it to work.
+I tried four different USB sticks before it worked.  I also didn't update
+the version file right away so it might have worked on some of the USB
+sticks had I tried that.
+ 
+Once the wdlxtv firmware has been installed, remove the USB
+
+Logging into the WD Live
+------------------------
+
+Now that wdlxtv firmware had been isntalled, I was able to login to the
+box using telnet.  As instructed I set a root password fr33str3am
+
+   telnet 192.168.1.127
+   passwd 
+   ...
+
+After setting the password, I was able to ssh into the box.
+
+   ssh root@192.168.1.127
+
+
+Adding a remote control
+-----------------------
+
+A number of people wrote wireless remote controls for the WD TV Live.
+
+http://forum.wdlxtv.com/viewtopic.php?f=38&t=2332
+   Android remote
+
+...
+
+There appears to be two ways: uPnP and using ir_injection.
+
+
+IR Injection
+------------
+
+Log into the WD, e.g., 
+
+  ssh root@192.168.1.127
+
+From the command line 
+  
+  # echo u > /tmp/ir_injection 
+
+This should cause the WD TV Live Plus to behave as if you pressed the
+"up" button on the remote control.  More details are available at
+
+  http://wiki.wdlxtv.com/Emulate_Remote_Keys#Method_3
+
+
+UPnP
+----
+
+Some things can also be done by injecting UPnP commands.  Log into the
+WD, e.g.,
+
+  ssh root@192.168.1.127
+
+From the command line you can print the help for issuing upnp commands.
+I present the help in abbreviated form here:
+  
+  # upnp-cmd
+  UPnP command line tool for WDTV Live v0.1
+  Usage: upnp-cmd action argument
+  
+  Available AVTransport actions:
+  
+  GetCurrentTransportActions
+  GetDeviceCapabilities
+  GetMediaInfo
+  [...]
+  Next
+  Pause
+  Play
+  Previous
+  Seek <SeekMode> <SeekTarget> (allowed SeekMode: "X_DLNA_REL_BYTE", "REL_TIME", "TRACK_NR")
+  SetAVTransportURI <URI> <URIMetaData> (allowed URI: "http://server/file", "file:///folder/file"
+  [...]
+  SetVolume <DesiredVolume> (allowed DesiredVolume = 1 to 100)
+
+
+I found this file helpful at understanding the basics of uPnP AV.
+Here is a basic interaction diagram
+
+   media               control                   media
+  server                point                   renderer
+     | CDS::Browse/       |                        |
+     | CDS::Search()      |                        |
+     |<-------------------|                        |
+     |------------------->|                        |
+     | content objects    | CM::GetProtocolInfo()  |
+     |                    |----------------------->|
+     |                    |<-----------------------|
+     |                    | Protocol/Format List   |
+     |                    |                        |
+     |               Choose matching               |
+     |             Protocol and Format             |
+     |                    |                        |
+     |                    .                        | 
+     | CM::PrepareForConnection()                  |
+     |<-------------------.                        |
+     |------------------->|                        .                        .
+     | AVT Instance ID    |CM::PrepareForConnection()
+     |                    |                        .
+     |                    |AVT::SetAVTransportURI()|
+     |                    |----------------------->|
+     |                    |<-----------------------|
+     |                    |                        |
+     |                    | AVT::Play()            |
+     |                    |----------------------->|
+     |                    |<-----------------------|
+     |                    |                        |
+     |                    .                        |
+     | out-of-band HTTP   .                        |
+     |============================================>|
+     |                    .                        |
+     |                    .                        |
+     |                    |CM::ConnectionComplete()|
+     |                    |----------------------->|
+     |                    |<-----------------------|
+
+
+
+I omitted some of the possible operations between control point and
+media server.
+
+It looks like in some cases DLNA has to be implemented by both sides,
+but this is probably not true if the media server is a web server.
+If the media server is a web server then the only thing the media render 
+needs to know is a URL to a server.  The control point could learn 
+about available codecs and such using HTTP content negotiation or 
+it could be determined out-of-band using site-specific APIs (like youtube 
+APIs) or by using a Metadizer.
+
+UPnP uses SOAP over HTTP for communications.  I would much prefer
+something that uses a REST interface.  I may modify this later, but
+I defined an initial set of operations section Remote Control Protocol.
+
+I looked at the source code for upnp-cmd:
+
+  https://svn.wdlxtv.com/filedetails.php?repname=1.05.04-wdlxtv&path=%2Flive%2Ftrunk%2Fusr%2Fbin%2Fupnp-cmd
+
+It uses http POST using XML... ahah SOAP!
+
+    $soap  ='<?xml version="1.0" encoding="utf-8"?>' . "\r\n";
+    $soap .='<s:Envelope s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">' . "\r\n";
+    $soap .='   <s:Body>' . "\r\n";
+    $soap .='      <u:' . $prmAction . ' xmlns:u="urn:schemas-upnp-org:service:' . $prmService . ':1">' . "\r\n";
+    $soap .=            $prmArguments;
+    $soap .='      </u:' . $prmAction . '>' . "\r\n";
+    $soap .='   </s:Body>' . "\r\n";
+    $soap .='</s:Envelope>' . "\r\n";
+
+    $hdr  ='POST /MediaRenderer_' . $prmService . '/control HTTP/1.0' . "\r\n";
+    $hdr .='SOAPACTION: "urn:schemas-upnp-org:service:' . $prmService . ':1#' . $prmAction . '"' . "\r\n";
+    $hdr .='CONTENT-TYPE: text/xml ; charset="utf-8"' . "\r\n";
+    $hdr .='HOST: 127.0.0.1:' . $wdtvPort . "\r\n";
+    $hdr .='Connection: close' . "\r\n";
+    $hdr .='Content-Length: ' . strlen($soap) . "\r\n";
+    $hdr .='' . "\r\n";
+
+These are commands via the local IP to $wdtvPort.
+
+We could use XML over SOAP, but DLNA does not appear to enable
+sandbox-reachable services.  DLNA could be made sandbox-reachable over
+Web Sockets but we would still like a policy layer that could be
+implemented via a trusted intermediary and the ability to support
+remote access which could be provided via relay.  Viola! A place for
+fling in the whole thing.
+
+Using UPnP to play:
+
+I made a file available over the network from my laptop:
+  http://192.168.1.49:8080/test.mp4
+
+I also made a few files available on USB:
+  Demo1.mkv                   ParksAndRecreationS2E5.m4v
+  HD Demo.mkv
+
+The USB files were mounted at:
+
+  /tmp/mnt/DFA2-531C
+
+From the command line I used upnp-cmd:
+
+  # upnp-cmd SetAVTransportURI "file:///tmp/mnt/DFA2-531C/ParksAndRecreationS2E5.m4v"
+  # upnp-cmd Play
+
+I can hear the audio but no video appears.
+
+I confirmed 
+
+  # upnp-cmd Pause  <--- causes it to play.
+
+  # upnp-cmd Play   <--- resumes play.
+
+  # upnp-cmd Next   <--- did nothing.  hmmm not sure how to define 
+                         what is next.
+  # upnp-cmd
+
+Now let's see if I can play across the network:
+
+  # upnp-cmd SetAVTransportURI "http://192.168.1.49:8080/test.mp4"
+
+I had trouble getting this to work using my server based on 
+gevent.pywsgi.WSGIServer, but I was able to play wihtou
+
+Writing an App
+--------------
+
+I wanted to write an app.  I tried writing root's home directory, but
+it is read-only.  I searched around on the device and found 
+
+I wanted to be able to run a python script at boot that would expose some
+of these operations.
+
+Installing Python
+-----------------
+
+I obtained optware 
+
+   from http://forum.wdlxtv.com/viewtopic.php?f=40&t=2637&start=10#p25198
+
+I placed opt.bin in the root of the USB.  It looks like everything
+custom for the WD gets installed onto the USB.
+
+From the command prompt on the WDTV with the USB plugged into the WDTV,
+
+  # ipkg update; ipkg install python
+
+I can now run python!!!
+
+Remote Control Protocol
+-----------------------
+
+I don't need to support everything that is possible with uPnP.
+This needs to be studied and better designed.
+
+  http://<private ip>:8080/<cmd>?<kwargs>
+
+
+Basic remote control functions:
+
+  POST http://192.168.1.127:8080/up
+  POST http://../down
+  POST http://../left
+  POST http://../right
+  POST http://../enter
+  POST http://../ok     # same as enter for WD TV.
+  POST http://../back
+  POST http://../home
+  POST http://../power
+  POST http://../stop
+  POST http://../play
+  POST http://../pause
+  POST http://../ff
+  POST http://../rev     # rewind.
+  POST http://../next
+  POST http://../prev
+
+
+I think a great way to implement "immediate play" would be
+
+  POST http://../play
+
+with a JSON body.
+
+  {
+    "url" : "http://example.com/mp4"
+  }
+
+The JSON body could use any of the arguments that can be passed to fling.
+
+
+Useful functions
+----------------
+
+I could potentially use som eof this code in the future to communicate
+using uPnP.  From 
+  http://forum.wdlxtv.com/viewtopic.php?f=17&t=3909
+I got the following:
+
+  function _actionSetMeta($prmURI = '') {
+      $meta  = '<DIDL-Lite xmlns="urn:schemas-upnp-org:metadata-1-0/DIDL-Lite/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:upnp="urn:schemas-upnp-org:metadata-1-0/upnp/">';
+      $meta .= '<item id="dummy1" parentID="dummy0" restricted="0">';
+      $meta .= '<dc:title>aaa\'bbb</dc:title>';
+      $meta .= '<dc:date></dc:date>';
+      $meta .= '<upnp:class>object.item.videoItem</upnp:class>';
+      $meta .= '<dc:creator></dc:creator>';
+      $meta .= '<upnp:genre></upnp:genre>';
+      $meta .= '<upnp:album></upnp:album>';
+      $meta .= '<res protocolInfo="*:*:video/x-msvideo:*"  resolution="512X384"  colorDepth="0" >file:///tmp/aaa\'bbb.avi</res>';
+      $meta .= '</item>';
+      $meta .= '</DIDL-Lite>';
+      
+      $action = 'SetAVTransportURI';
+      $args   = '<InstanceID>0</InstanceID>' . "\r\n";
+      $args  .= '<CurrentURI>' . $prmURI . '</CurrentURI>' . "\r\n";
+      $args  .= '<CurrentURIMetaData>' . htmlentities($meta) . '</CurrentURIMetaData>' . "\r\n";
+      $result = _sendUPnPCommand($action, $args, 'AVTransport');
+  }
+
+
+How To Start a Program at Boot
+------------------------------
+
+Put remote_control.py and S00custom-options onto the root of
+a USB stick that is formatted FAT-32 and put it in the left-hand side
+of the Western Digital then unplug (don't just hit power) and plug
+
+S00custom-options is a boot script that starts remote_control.py:
+
+    #!/bin/sh
+
+    touch /tmp/s00-run.txt
+
+    /tmp/mnt/DFA2-531C/remote_control.py &
+
+
+The USB stick is mounted in /tmp/mnt/DFA2-531C.  The current working
+directory when it runs S00custom-options is / so I referred to the
+path to remote_control.py explicitly in s00custom-options.
+
+I believe DFA2-531C probably varies between USB sticks so you will have
+to update this path on other USB sticks.  
+
+
+References
+----------
+
+http://wdlxtv.com
+  * http://wiki.wdlxtv.com/Main_Page
+
+http://forum.wdlxtv.com/viewtopic.php?f=16&t=2031&start=50
+
+http://forum.wdlxtv.com/viewtopic.php?f=40&t=5763
+  * Webplayer Jukebox app.bin
+    based on WebEnd forum  
+    (http://forum.wdlxtv.com/viewtopic.php?f=16&t=2031&start=50)
+
+http://www.evgor.com/wdtv/
+  * Web interface media player
+    webserver and simple uPnP control point
+  * http://www.evgor.com/wdtv/webplayer.perl
+    Implementation reveals that there is a uPnP command-line tool
+    that would allow me to issue uPnP commands.  I copied the following
+    perl snippets:
+
+    `sudo upnp-cmd Play`;
+    ...
+    `sudo upnp-cmd Pause`;
+    ...
+    `sudo upnp-cmd Stop`;
+    ...
+    sub play_item {
+      my $item = shift;
+      $CURRENT_TRACK = $item;
+      $HANDLE_EVENTS = undef;
+      `sudo /usr/bin/upnp-cmd SetAVTransportURI "file://$PLAYLIST[$item]"`;
+      `sudo /usr/bin/upnp-cmd Play`;
+    }
+
+
+http://wdtvforum.com/main/index.php?topic=824.0
+  references a dependency on a web server 
+     http://wiki.wdtv.org/doku.php?id=wdtv_web_interface
+  This link is broken.
+
+  Other dependencies:
+    * http://wdtv.droopy.sk/irset/
+    * ext3-boot firmware. I don't believe irset will work on wdlxtv, 
+      but I'd love to be wrong.  
+
+

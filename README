@@ -17,6 +17,11 @@ the queue call from the Flingo backend.
  
   Fling items from the command-line to the TV.  Will serve the file
   until command-line Flingo is stopped (e.g., ctrl-C). 
+
+* Flingo/WDLXTVRemoteControl
+
+  Adds a web services remote control API to a WD that supports
+  JSONP cross-site scripting. 
  
 
 Install
